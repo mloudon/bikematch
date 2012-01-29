@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
-{% block topbar %}
-{% if user.userprofile.needs_approval %}
-( {{ user.userprofile.needs_approval }} )
-{% endif %}
-{% endblock %}
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% block head_title %}{% trans "Map!" %}{% endblock %}
 
 {% block content %}
 
