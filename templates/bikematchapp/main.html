@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+{% if user.userprofile.needs_approval %}
+( {{ user.userprofile.needs_approval }} )
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+	<h4>Hi {{ user.get_profile.first_name }} from {{ user.get_profile.location.latitude }} {{ user.get_profile.location.longitude }}  </h4>
+{% else %}
+	<h4>Hello, who are you?</h4>
+{% endif %}
+        {% block safe_content %}{% endblock %}
+{% endblock %}
