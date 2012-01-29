@@ -163,7 +163,7 @@ class GoogleMap(Widget):
         final_attrs['style'] = style + final_attrs.get('style', '')
         
         map_div = (u'<div class="%s" style="'
-                   u'width: 100%%; height: 100%%; position:absolute;"></div>' %
+                   u'width: 940px; height: 600px; position:absolute;"></div>' %
                    (escape(dumps(gmap, separators=(',', ':')))))
         
         return mark_safe(u'<div%s>%s</div>' %

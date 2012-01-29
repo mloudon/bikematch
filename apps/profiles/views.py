@@ -66,7 +66,7 @@ class ProfileListView(ListView):
     
     If all_profiles is set to True, all profiles are listed.
     """
-    template_name = "idios/profiles.html"
+    template_name = "profiles/profiles.html"
     context_object_name = "profiles"
     all_profiles = False
     
@@ -123,7 +123,7 @@ class ProfileListView(ListView):
 
 class ProfileDetailView(DetailView):
     
-    template_name = "idios/profile.html"
+    template_name = "profiles/profile.html"
     context_object_name = "profile"
     
     def get_object(self):
@@ -167,15 +167,11 @@ class ProfileDetailView(DetailView):
 
 class ProfileCreateView(CreateView):
     
-    template_name = "idios/profile_create.html"
-    template_name_ajax = "idios/profile_create_ajax.html"
+    template_name = "profiles/profile_create.html"
     
     def get_template_names(self):
         
-        if self.request.is_ajax():
-            return [self.template_name_ajax]
-        else:
-            return [self.template_name]
+        return [self.template_name]
     
     def get_form_class(self):
         
@@ -229,10 +225,7 @@ class ProfileUpdateView(UpdateView):
     form_class = EditProfileForm
     
     def get_template_names(self):
-        if self.request.is_ajax():
-            return [self.template_name_ajax]
-        else:
-            return [self.template_name]
+        return [self.template_name]
     
     def get_form_class(self):
         
