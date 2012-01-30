@@ -27,9 +27,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 def init_logging():
-    stdoutHandler = logging.StreamHandler( sys.stdout )
+    stdoutHandler = logging.StreamHandler(sys.stdout)
     if len(logger.handlers) < 1:
-        logger.addHandler( stdoutHandler )
+        logger.addHandler(stdoutHandler)
 
 init_logging()
 
@@ -46,8 +46,8 @@ def index(request):
     }, context_instance=RequestContext(request))
 
 def mapview(request, template_name='bikematchapp/mapview.html'):
-    gmap = maps.Map(opts = {
-        'center': maps.LatLng(34.11,-118.27),
+    gmap = maps.Map(opts={
+        'center': maps.LatLng(34.11, -118.27),
         'mapTypeId': maps.MapTypeId.HYBRID,
         #'size': maps.Size(800,600),
         'zoom': 10,
@@ -59,9 +59,9 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
     for profile in Profile.objects.all():
         if profile.location:
             image = os.path.join(settings.STATIC_URL, "images", "bike_blue.png")            
-            marker = maps.Marker(opts = {
+            marker = maps.Marker(opts={
                                      'map': gmap,
-                                     'position': maps.LatLng(profile.location.latitude,profile.location.longitude),
+                                     'position': maps.LatLng(profile.location.latitude, profile.location.longitude),
                                      'icon' : image,
                                      'proj_id': profile.user.id
         
@@ -71,7 +71,9 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
             maps.event.addListener(marker, 'mouseout', 'myobj.markerOut')
             maps.event.addListener(marker, 'click', 'myobj.onClick')
             
-            contentString = '<div id="infobox" class="infobox" > User: %s </div>' % escape(profile.user.username)
+            #contentString = '<div id="infobox" class="infobox" > User: %s </div>' % escape(profile.user.username)
+            contentString = '<p>user: %s</p><p><a href="messages/compose/%s">message this user</a></p>' % (escape(profile.user.username),escape(profile.user.username))
+    
             info = maps.InfoWindow({
                                     'content': contentString,
                                     'disableAutoPan': True
@@ -86,3 +88,4 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
 
 def root_index(request):
     return redirect('/') 
+
