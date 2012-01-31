@@ -9,7 +9,6 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.utils.html import escape 
 from django import forms
 
-from registration.models import RegistrationProfile
 import datetime, random, sys, os
 
 from django.conf import settings
