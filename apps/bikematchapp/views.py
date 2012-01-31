@@ -12,8 +12,6 @@ from django import forms
 import datetime, random, sys, os
 
 from django.conf import settings
-from django.contrib.gis.maps.google.gmap import GoogleMap
-from django.contrib.gis.maps.google.overlays import GMarker, GEvent
 
 from gmapi import maps
 from bikematchapp.forms import MapForm
