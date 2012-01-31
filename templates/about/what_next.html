@@ -18,6 +18,9 @@
             <dt><a href="{% url profile_detail user.username %}">fill out your profile</a></dt>
             <dd>to tell the world a little about yourself.</dd>
             
+            <dt><a href="/mapview/">see where other bike commuters are located</a></dt>
+            <dd> on the map.</dd>
+            
             {% ifsetting ACCOUNT_OPEN_SIGNUP %}
             {% else %}
                 {% if user.is_staff %}
