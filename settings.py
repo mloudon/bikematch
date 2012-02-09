@@ -175,6 +175,8 @@ INSTALLED_APPS = [
     "profiles",
     "locations",
     "django_messages",
+    "uni_form",
+    "wall",
     "bikematch"
 ]
 
