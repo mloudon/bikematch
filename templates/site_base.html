@@ -6,9 +6,9 @@
 {% block nav %}
     {% if user.is_authenticated %}
         <ul>{% spaceless %}
-            <li id="tab_profile"><a href="{% url profile_detail user.username %}">{% trans "Profile" %}</a></li>
+            <li id="tab_wall"><a href="/wall/wall/">{% trans "Wall" %}</a></li>
             <li id="tab_map"><a href="/mapview/">{% trans "Map" %}</a></li>
-            <li id="tab_notices"><a href="/messages/inbox">{% trans "Messages" %}</a></li>
+            <li id="tab_messages"><a href="/messages/inbox">{% trans "Messages" %}</a></li>
         {% endspaceless %}</ul>
     {% endif %}
 {% endblock %}

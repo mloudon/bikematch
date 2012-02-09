@@ -3,6 +3,7 @@
         <li>
             <a href="#" class="menu">{{ user }}</a>
             <ul class="menu-dropdown">
+            	<li><a href="{% url profile_detail user.username %}">My Profile</a></li>
                 <li><a href="{% url acct_email %}">Account Settings</a></li>
                 <li><a href="{% url notification_notices %}">Notifications</a></li>
                 {% if user.is_staff %}
