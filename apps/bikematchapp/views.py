@@ -55,7 +55,7 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
     
     for profile in Profile.objects.all():
         if profile.location:
-            image = os.path.join(settings.STATIC_URL, "images", "bike_blue.png")            
+            image = os.path.join(profile.profile_pic_small.url)            
             marker = maps.Marker(opts={
                                      'map': gmap,
                                      'position': maps.LatLng(profile.location.latitude, profile.location.longitude),
