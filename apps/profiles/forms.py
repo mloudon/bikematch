@@ -19,7 +19,8 @@ class EditProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ('name',
-                  'zip_code',
+                  'profile_pic',
+                  #'zip_code',
                   'location',
                   'days_per_week',
                   'oneway_dist',
@@ -32,7 +33,8 @@ class CreateProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ('name',
-                  'zip_code',
+                  'profile_pic',
+                  #'zip_code',
                   'location',
                   'days_per_week',
                   'oneway_dist',

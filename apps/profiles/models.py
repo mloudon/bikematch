@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from idios.models import ProfileBase
 from locations.models import Location
+from imagekit.models import ImageSpec
+from imagekit.processors import resize, Adjust
 
 DAYS_PER_WEEK_CHOICES = (
     (0, "none, but I'd like to start!"),
@@ -19,6 +21,11 @@ class Profile(ProfileBase):
     name = models.CharField(_("Name"), max_length=50, null=True, blank=True)
     about = models.TextField(_("About"), null=True, blank=True)
     zip_code = models.CharField("* Zip code",max_length=10, null=True, blank=True)
+    
+    profile_pic = models.ImageField(upload_to='upload')
+    profile_pic_small = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
+            resize.Crop(50, 50)], image_field='profile_pic',
+            format='JPEG', options={'quality': 90})
     
     #TODO use postgis?
     location = models.ForeignKey(Location, null=True, blank=True)
