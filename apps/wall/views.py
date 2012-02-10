@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 from wall.models import Wall, WallItem
 from wall.forms import WallItemForm
@@ -42,7 +43,7 @@ def add( request, slug, form_class=WallItemForm,
                 body = posting[:wall.max_item_length]
             else:
                 body = posting
-            item = WallItem( author=request.user, wall=wall, body=body )
+            item = WallItem( author=request.user, wall=wall, body=body, created_at=datetime.now() )
             item.save()
             return HttpResponseRedirect(success_url)
     else:
