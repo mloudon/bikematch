@@ -22,9 +22,9 @@ class Profile(ProfileBase):
     about = models.TextField(_("About"), null=True, blank=True)
     zip_code = models.CharField("* Zip code",max_length=10, null=True, blank=True)
     
-    profile_pic = models.ImageField(upload_to='upload')
+    profile_pic = models.ImageField(upload_to='upload',null=True,)
     profile_pic_small = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
-            resize.Crop(50, 50)], image_field='profile_pic',
+            resize.Crop(40, 40)], image_field='profile_pic',
             format='JPEG', options={'quality': 90})
     
     #TODO use postgis?
