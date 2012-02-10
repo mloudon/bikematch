@@ -10,14 +10,13 @@
 {% endblock %}
 
 {% block body %}
-
 <h2 align="center">Edit an item from {{ wall.name }}</h2>
 <p>
-<form action="." method="POST">
+<form action="." method="POST" class="uniForm">{% csrf_token %}
 <table>
 {{ form.as_table }}
 </table>
-<input type="submit" value="Submit"/>
+<input type="submit" value="Submit" class="btn primary large"/>
 </form>
 </p>
 <hr/>
