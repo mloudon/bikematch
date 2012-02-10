@@ -12,7 +12,7 @@ class WallItemForm(forms.Form):
     This form collects a new post.
     """
     posting = forms.CharField(label=_(u"Item"),
-        widget=forms.Textarea(attrs={'rows': '5', 'cols':'50'}))
+        widget=forms.Textarea(attrs={'rows': '10', 'cols':'100'}))
 
     def __init__(self, *args, **kwargs):
         help_text = kwargs.pop('help_text', "")

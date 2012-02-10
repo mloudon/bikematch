@@ -10,12 +10,13 @@
 <h2 align="center">{{ wall.name }}</h2>
 
 <div class="form-toggle">    
-    <p><span id="post-to-wall-toggle">{% trans "Post to the wall" %}</span></p>
+    <p><span id="post-to-wall-toggle" class="btn">{% trans "Post to the wall" %}</span></p>
     <div id="post-to-wall">
         <form method="POST" class="uniForm" action="{% url add_wall_item wall.slug %}">{% csrf_token %}
             {{ form|as_uni_form }}
-            <input type="submit" value="{% trans 'Submit' %}" />
+            <input type="submit" class="btn primary large" value="{% trans 'Submit' %}" />
         </form>
+
     </div>
     
 </div>
@@ -43,9 +44,19 @@
 
 {% endblock %}
 
+{% block extra_body_scripts %}
 
-{% block extra_body %}
-
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/ckeditor/ckeditor.js"></script>
+		
+	<script type="text/javascript">
+		window.onload = function()
+		{
+			CKEDITOR.replace('id_posting', 
+				{
+					toolbar : 'Basic'
+				});
+		};
+	</script>
 
     <script type="text/javascript">
     

@@ -64,5 +64,8 @@
         <script src="{{ STATIC_URL }}js/bootstrap-buttons.js"></script>
         <script src="{{ STATIC_URL }}js/theme.js"></script>
         <script src="{{ STATIC_URL }}js/pinax.modal.js"></script>
+        
+        {% block extra_body_scripts %}{% endblock %}
+        
     </body>
 </html>

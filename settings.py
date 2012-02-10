@@ -229,6 +229,6 @@ try:
 except ImportError:
     pass
 
-GMAPI_MEDIA_PREFIX = os.path.join(STATIC_URL, "gmapi/")
+GMAPI_MEDIA_PREFIX = os.path.join(STATIC_URL, "js/gmapi/")
 GOOGLE_MAPS_API_PASSWORD="ABQIAAAA-4r90Kb_dOUZqomVKEBOpRQZWni6wDlQbuSEPT7B-GvxWEumHBSCpYF-GOX_MDMRQBxvS9WaCbOayw"
 
