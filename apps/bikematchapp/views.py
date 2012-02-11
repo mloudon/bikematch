@@ -53,8 +53,6 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
         },
     })
     
-    
-    
     for profile in Profile.objects.all():
         if profile.location:
             
@@ -67,7 +65,7 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
                                      'map': gmap,
                                      'position': maps.LatLng(profile.location.latitude, profile.location.longitude),
                                      'icon' : image,
-                                     'proj_id': profile.user.id
+                                     'profile_username': profile.user.username
         
                                      })
             
@@ -75,12 +73,10 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
             maps.event.addListener(marker, 'mouseout', 'myobj.markerOut')
             maps.event.addListener(marker, 'click', 'myobj.onClick')
             
-            #contentString = '<div id="infobox" class="infobox" > User: %s </div>' % escape(profile.user.username)
-            contentString = '<p>user: %s</p><p><a href="messages/compose/%s">message this user</a></p>' % (escape(profile.user.username),escape(profile.user.username))
+            contentString = '<div class="row"><div class="span2"><img src="%s"/></div><div class="span2"><p><strong>%s</strong></p><p>%s</p></div></div>' % (escape(profile.profile_pic_med.url),escape(profile.name),escape(profile.about))
     
             info = maps.InfoWindow({
                                     'content': contentString,
-                                    'disableAutoPan': True
                                     })
             info.open(gmap, marker)
     

@@ -24,6 +24,8 @@
     {% include "profiles/_profile_info.html" %}
     
     {% if is_me %}
-        <p><a id="edit-profile-box" href="{% url profile_edit %}" class="btn">Edit profile</a></p>
+        <p><a id="edit-profile-box" href="{% url profile_edit %}" class="btn success">Edit profile</a></p>
+    {% else %}
+    	<p><a id="message-user-box" href="{% url messages_compose_to profile.user.username %}" class="btn success">Message this user</a></p>
     {% endif %}
 {% endblock %}

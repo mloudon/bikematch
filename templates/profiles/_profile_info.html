@@ -3,18 +3,26 @@
 	<div class="row">
 		
 		<div class="span2">
-    		{% if profile.profile_pic_med.url  %}<p><img src="{{ profile.profile_pic_med.url }}"/></p>{% endif %}
+    		{% if profile.profile_pic_med  %}
+    			<p><img src="{{ profile.profile_pic_med.url }}"/></p>
+    		{% else %}	
+    			<p><em>no profile picture yet</em></p>
+    		{% endif %}
 		</div>
 		<div class="span5">
-    		{% if profile.about  %}<p>{{ profile.about}}</p>{% endif %}
+    		{% if profile.about  %}
+    			<p>{{ profile.about}}</p>
+    		{% else %}	
+    			<p><em>hasn't filled in anything about themself</em></p>
+    		{% endif %}
+    		
 			{% if profile.days_per_week = 0 %}
-			{% if profile.days_per_week  %}<li>doesn't commute regularly yet</li>{% endif %}
-		
+				{% if profile.days_per_week  %}<li>doesn't commute regularly yet</li>{% endif %}
 			{% else %}
 			<ul>
-    		{% if profile.days_per_week  %}<li>commutes {{ profile.days_per_week  }} days per week</li>{% endif %}
-			{% if profile.oneway_dist  %}<li> {{ profile.oneway_dist }} miles each way</li>{% endif %}
-			{% if profile.oneway_time  %}<li> {{ profile.oneway_time }} minutes each way</li>{% endif %}
+    			{% if profile.days_per_week  %}<li>commutes {{ profile.days_per_week  }} days per week</li>{% endif %}
+				{% if profile.oneway_dist  %}<li> {{ profile.oneway_dist }} miles each way</li>{% endif %}
+				{% if profile.oneway_time  %}<li> {{ profile.oneway_time }} minutes each way</li>{% endif %}
 			<ul>
 			{% endif %}
 		</div>

@@ -14,6 +14,10 @@
             window.myobj = {
                 markerOver: function() { this.openInfoWindow(); },
                 markerOut: function() { this.closeInfoWindow(); },
+                onClick: function() {
+								profile_username = this.profile_username ;
+								window.location = '../profiles/profile/'+ profile_username;
+           		 				},
                  };
         </script>
 {% endblock %}
