@@ -1,3 +1,4 @@
+import os
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect
@@ -11,6 +12,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from profiles.forms import EditProfileForm
+from profiles.models import Profile
+from django import forms
+from gmapi import maps
+from gmapi.forms.widgets import GoogleMap
+
+
+class MapForm(forms.Form):
+    map = forms.Field(widget=GoogleMap(attrs={}))
+
 
 try:
     from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -127,7 +137,6 @@ class ProfileDetailView(DetailView):
     context_object_name = "profile"
     
     def get_object(self):
-        
         username = self.kwargs.get("username")
         profile_class = get_profile_model(self.kwargs.get("profile_slug"))
         
@@ -144,6 +153,28 @@ class ProfileDetailView(DetailView):
             self.page_user = profile.user
             return profile
     
+    
+    def get_map(self,profile):
+        
+        if (profile.location == None):
+            return None
+       
+        gmap = maps.Map(opts={
+            'center': maps.LatLng(profile.location.latitude, profile.location.longitude),
+            'mapTypeId': maps.MapTypeId.ROADMAP,
+            'zoom': 12,
+            'mapTypeControlOptions': {
+            'style': maps.MapTypeControlStyle.DROPDOWN_MENU
+            },
+        })
+                       
+        marker = maps.Marker(opts={
+            'map': gmap,
+            'position': maps.LatLng(profile.location.latitude, profile.location.longitude),
+            })
+        
+        return gmap
+    
     def get_context_data(self, **kwargs):
         
         base_profile_class = get_profile_base()
@@ -151,16 +182,22 @@ class ProfileDetailView(DetailView):
         
         group, bridge = group_and_bridge(kwargs)
         is_me = self.request.user == self.page_user
+        map = self.get_map(self.get_object());
+        print map
         
         ctx = group_context(group, bridge)
         ctx.update({
             "is_me": is_me,
             "page_user": self.page_user,
             "profiles": profiles,
+            'form': MapForm(initial={'map': self.get_map(self.get_object())})
         })
+        
+        
         ctx.update(
             super(ProfileDetailView, self).get_context_data(**kwargs)
         )
+        
         
         return ctx
 
