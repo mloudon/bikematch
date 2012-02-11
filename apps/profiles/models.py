@@ -39,9 +39,11 @@ class Border(object):
 class Profile(ProfileBase):
     name = models.CharField(_("Name"), max_length=50, null=True, blank=True)
     about = models.TextField(_("About"), null=True, blank=True)
-    zip_code = models.CharField("* Zip code",max_length=10, null=True, blank=True)
     
     profile_pic = models.ImageField(upload_to='upload',null=True,)
+    profile_pic_med = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
+            resize.Crop(80, 80)], image_field='profile_pic',
+            format='JPEG', options={'quality': 90})
     profile_pic_small = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
             resize.Crop(40, 40)], image_field='profile_pic',
             format='JPEG', options={'quality': 90})

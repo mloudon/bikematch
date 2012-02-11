@@ -1,7 +1,27 @@
 {% load i18n %}
-<div class="profile_info">
-    {% if profile.name %}<p><b>{% trans "Name" %}</b>: {{ profile.name }}</p>{% endif %}
-    {% if profile.about %}<p><b>{% trans "About" %}</b>: {{ profile.about }}</p>{% endif %}
-    {% if profile.location %}<p><b>{% trans "Location" %}</b>: {{ profile.location }}</p>{% endif %}
-    {% if profile.website %}<p><b>{% trans "Website" %}</b>: <a href="{{ profile.website }}">{{ profile.website }}</a></p>{% endif %}
+<div class="row">
+<div class="span6">
+		<div class="row">
+		<div class="span2">
+    		{% if profile.profile_pic_med.url  %}<p><img src="{{ profile.profile_pic_med.url }}"/></p>{% endif %}
+		</div>
+		<div class="span4">
+    		{% if profile.about  %}<p>{{ profile.about}}</p>{% endif %}
+			{% if profile.days_per_week = 0 %}
+			{% if profile.days_per_week  %}<li>doesn't commute regularly yet</li>{% endif %}
+		
+			{% else %}
+			<ul>
+    		{% if profile.days_per_week  %}<li>commutes {{ profile.days_per_week  }} days per week</li>{% endif %}
+			{% if profile.oneway_dist  %}<li> {{ profile.oneway_dist }} miles each way</li>{% endif %}
+			{% if profile.oneway_time  %}<li> {{ profile.oneway_time }} minutes each way</li>{% endif %}
+			<ul>
+			{% endif %}
+		</div>
+		</div>
+</div>
+
+<div class="span6">
+		
+</div>
 </div>

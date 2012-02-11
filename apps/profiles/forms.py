@@ -14,13 +14,13 @@ DAYS_PER_WEEK_CHOICES = (
 )
 
 class EditProfileForm(ModelForm):
-    location = LocationField(label="* Location")
+    location = LocationField(label="Location")
     
     class Meta:
         model = Profile
         fields = ('name',
                   'profile_pic',
-                  #'zip_code',
+                  'about',
                   'location',
                   'days_per_week',
                   'oneway_dist',
@@ -28,13 +28,13 @@ class EditProfileForm(ModelForm):
                   )
       
 class CreateProfileForm(ModelForm):
-    location = LocationField(label="* Location")
+    location = LocationField(label="Location")
     
     class Meta:
         model = Profile
         fields = ('name',
                   'profile_pic',
-                  #'zip_code',
+                  'about',
                   'location',
                   'days_per_week',
                   'oneway_dist',
