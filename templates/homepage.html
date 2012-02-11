@@ -8,18 +8,20 @@
 {% block body_class %}home{% endblock %}
 
 {% block banner %}
-    <h1>{% trans "Welcome!" %}</h1>
-    <p>
-        {% blocktrans %}
-        <b>USC Bicycle Commuters connects USC cycling commuters with resources, information, and events relevant to this community..
-        {% endblocktrans %}
-    </p>
+	
+    <div class="row">
+    <div class="span8">
+    <img src="{{ STATIC_URL }}/images/BikeCommutersImage2.jpg"/>
+    </div>
     
-    <h2>About Bike Buddies</h2>
+    <div class="span4">
+    </div>
+    <h1>{% trans "Welcome!" %}</h1>
+    
     <p>
-        {% blocktrans %}
+       
+        USC Bike Commuters connects USC cycling commuters with resources, information, and events relevant to this community.
         Put yourself on the map and we'll let you know who else from your area bikes to USC.
-        {% endblocktrans %}
     </p>
     
     {% if user.is_authenticated %}
@@ -34,4 +36,6 @@
             <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn primary large">Log In</a> to try out the site.{% endblocktrans %}</p>
         {% endifsetting %}
     {% endif %}
+    </div>
+    </div>
 {% endblock %}
