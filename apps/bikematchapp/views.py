@@ -59,7 +59,7 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
         if profile.location:
             
             if profile.profile_pic_small.url:
-                image = os.path.join(profile.profile_pic_small.url) 
+                image = os.path.join(profile.profile_pic_small_border.url) 
             else:
                 image = os.path.join(settings.STATIC_URL, "images", "bike_blue.png")
                        
