@@ -23,7 +23,7 @@ def home( request, slug, template_name='wall/home.html'):
 
 @login_required
 def add( request, slug, form_class=WallItemForm,
-            template_name='wall/add.html',
+            template_name='wall/home.html',
             success_url=None, can_add_check=None):
     """
     A view for adding a new WallItem.

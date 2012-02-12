@@ -7,10 +7,10 @@
 
 {% block body %}
 
-<h2 align="center">{{ wall.name }}</h2>
+<!--<h2 align="center">{{ wall.name }}</h2>-->
 
 <div class="form-toggle">    
-    <p><span id="post-to-wall-toggle" class="btn">{% trans "Post to the wall" %}</span></p>
+    <p><span id="post-to-wall-toggle" class="btn primary large">{% trans "Post to the wall" %}</span></p>
     <div id="post-to-wall">
         <form method="POST" class="uniForm" enctype="multipart/form-data" action="{% url add_wall_item wall.slug %}">{% csrf_token %}
             {{ form|as_bootstrap }}
