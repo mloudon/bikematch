@@ -27,8 +27,8 @@
 {% for item in wall.wallitem_set.select_related %}
 <div class="row">
 	<div id="profilepic" class="span1">
-	{% if profile.profile_pic_small  %}
-    		<p><img src="{{ profile.profile_pic_small.url }}"/></p>
+	{% if item.author.get_profile.profile_pic_small  %}
+    		<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
     {% else %}	
     		<p><em>no profile picture yet</em></p>
     {% endif %}
@@ -56,8 +56,8 @@
 {% for item in wall.wallitem_set.select_related %}
 <div class="row">
 	<div id="profilepic" class="span1">
-	{% if profile.profile_pic_small  %}
-    		<p><img src="{{ profile.profile_pic_small.url }}"/></p>
+	{% if item.author.get_profile.profile_pic_small  %}
+    		<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
     {% else %}	
     		<p><em>no profile picture yet</em></p>
     {% endif %}
