@@ -36,16 +36,25 @@ def add( request, slug, form_class=WallItemForm,
     if success_url == None:
         success_url = reverse( 'wall_home', args=(slug,))
     if request.method == 'POST':
-        form = form_class(request.POST)
+        form = form_class(request.POST,request.FILES)
         if form.is_valid():
             posting = form.cleaned_data['posting']
+            
             if len(posting) > wall.max_item_length:
                 body = posting[:wall.max_item_length]
             else:
                 body = posting
             item = WallItem( author=request.user, wall=wall, body=body, created_at=datetime.now() )
             item.save()
+            
+            if request.FILES:
+                file_content = request.FILES['img']
+                item.item_pic.save(file_content.name, file_content, save=True)
+            
             return HttpResponseRedirect(success_url)
+        else:
+            print 'errors'
+            print form.errors
     else:
         if can_add_check != None:
             allowed = can_add_check( request.user, wall )

@@ -13,6 +13,7 @@ class WallItemForm(forms.Form):
     """
     posting = forms.CharField(label=_(u"Item"),
         widget=forms.Textarea(attrs={'rows': '10', 'cols':'100'}))
+    img = forms.ImageField(label=_(u"Add an Image"),required=False)
 
     def __init__(self, *args, **kwargs):
         help_text = kwargs.pop('help_text', "")
@@ -21,5 +22,6 @@ class WallItemForm(forms.Form):
 
     def save(self, user=None):
         posting = self.cleaned_data['posting']
+        
         return posting
 

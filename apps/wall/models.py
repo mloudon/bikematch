@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import truncatewords
+from imagekit.models import ImageSpec
+from imagekit.processors import resize, Adjust
 
 class WallItem(models.Model):
     """
@@ -14,6 +16,10 @@ class WallItem(models.Model):
     author     = models.ForeignKey(User, related_name="wall_item_author")
     body       = models.TextField(_('item_body'))
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
+    item_pic = models.ImageField(upload_to='upload',null=True,)
+    item_pic_resized = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
+            resize.Crop(300, 300)], image_field='item_pic',
+            format='JPEG', options={'quality': 90})
 
     class Meta:
         verbose_name        = _('wallitem')
