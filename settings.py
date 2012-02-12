@@ -170,6 +170,9 @@ INSTALLED_APPS = [
     "pinax.apps.account",
     "pinax.apps.signup_codes",
     
+    # db migrations
+    "south",
+    
     # project
     "about",
     "profiles",
