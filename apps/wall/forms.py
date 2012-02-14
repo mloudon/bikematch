@@ -24,4 +24,21 @@ class WallItemForm(forms.Form):
         posting = self.cleaned_data['posting']
         
         return posting
+    
+class WallItemCommentForm(forms.Form):
+    """
+    This form collects a comment.
+    """
+    comment = forms.CharField(label=_(u"Comment:"),
+        widget=forms.Textarea(attrs={'rows': '3'}))
+
+    def __init__(self, *args, **kwargs):
+        help_text = kwargs.pop('help_text', "")
+        super(WallItemCommentForm, self).__init__(*args, **kwargs)
+        self.fields['comment'].help_text = help_text
+
+    def save(self, user=None):
+        comment = self.cleaned_data['comment']
+        
+        return comment
 

@@ -8,6 +8,25 @@ from django.template.defaultfilters import truncatewords
 from imagekit.models import ImageSpec
 from imagekit.processors import resize, Adjust
 
+
+class WallComment(models.Model):
+    """
+    A comment on a wall post.
+    """
+    wallitem   = models.ForeignKey('WallItem')
+    author     = models.ForeignKey(User, related_name="wall_comment_author")
+    body       = models.TextField(_('item_body'))
+    created_at = models.DateTimeField(_('created at'), default=datetime.now)
+    
+    class Meta:
+        verbose_name        = _('wallitemcomment')
+        verbose_name_plural = _('wallitemcomments')
+        ordering            = ('-created_at',) 
+        get_latest_by       = 'created_at'
+
+    def __unicode__(self):
+         return 'comment on wall item created by %s on %s ( %s )' % ( self.author.username, self.created_at, truncatewords(self.body, 9 ))
+
 class WallItem(models.Model):
     """
     A simple note to post on a shared wall.

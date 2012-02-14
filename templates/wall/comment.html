@@ -1,0 +1,21 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load bootstrap_tags %}
+
+{% block head_title %}{{ block.super }}: {{ wall.name }}{% endblock %}
+
+{% block body %}
+
+<div class="span8 offset1">
+    <div class="comment-error">
+    {{ commentform.errors}}
+    </div>
+    <div class="comment-form">
+    <form method="POST" action="{% url add_wall_comment wallitemid %}">{% csrf_token %}
+            {{ commentform|as_bootstrap }}
+            <input type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
+     </form>
+    </div>
+    </div>
+ {% endblock %}
