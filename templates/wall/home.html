@@ -25,38 +25,21 @@
 {% if wall.allow_html %}
 {% autoescape off %}
 {% for item in wall.wallitem_set.select_related %}
-<div class="row">
+	<div class="row">
 	<div class="span1">
 	{% if item.author.get_profile.profile_pic_small  %}
     		<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
     {% else %}	
     		<p><em>no profile picture yet</em></p>
-    		<div>
-    		{% ifequal item.author request.user %}<a href="{% url edit_wall_item item.id %}"  class="btn primary small">Edit</a>{% endifequal %}
-    		<p><span id="comment-toggle{{item.id}}" class="btn primary small">comment</span></p>
-    		</div>
-    		<div>
-    		<a href="{% url edit_wall_item item.id %}">Comment</a>
-    		</div>
     {% endif %}
+    {% ifequal item.author request.user %}<a href="{% url edit_wall_item item.id %}"  class="btn warning small">edit</a>{% endifequal %}
 	</div>
 	{% if item.item_pic_resized  %}
     <div class="span8">
-   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}</i>{{ item.body }}
-    		{% ifequal item.author request.user %}<a href="{% url edit_wall_item item.id %}"  class="btn primary small">Edit</a>{% endifequal %}
-    		<p><span id="comment-toggle{{item.id}}" class="btn primary small">comment</span></p>
-	</div>
-	<div class="span3">
-   			<img src="{{ item.item_pic_resized.url }}"/>
-	</div>
-    {% else %}	
-    <div class="span11">
-   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}</i>{{ item.body }}
-	</div>
-    {% endif %}
-</div>
+   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small">comment</span>
+   			<p>{{ item.body }}</p>
 	<div class="row">
-    <div id="comments{{item.id}}" class="span8 offset1">
+    <div id="comments{{item.id}}" class="span7 offset1">
     {% for comment in item.wallcomment_set.select_related reversed %}
     	<div class="comment{{item.id}}">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
@@ -66,18 +49,24 @@
     </div>
     
     <div class="row">
-    <div class="span8 offset1">
+    <div class="span7 offset1">
     <div class="comment-error{{item.id}}">
     </div>
     </div>
     </div>
     
     <div class="row">
-    <div class="span8 offset1">
+    <div class="span7 offset1">
     
     <div id="comment-form{{item.id}}" class="comment-form{{item.id}}">
-    <form method="POST" action="{% url add_wall_comment item.id %}">{% csrf_token %}
-            {{ commentform|as_bootstrap }}
+    <form method="POST" action="{% url add_wall_comment item.id %}" >{% csrf_token %}
+		
+       		<fieldset class="control-group">
+    		<div class="controls">
+       			{{ commentform.comment }}
+    		</div>
+			</fieldset>
+
             <input type="hidden" id="id_submit_url{{item.id}}" value="{% url add_wall_comment item.id %}" />
             <input type="hidden" id="id_object_pk{{item.id}}" value="{{ item.id }}" />
             <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
@@ -85,6 +74,54 @@
     </div>
     </div>
     </div>
+	</div>
+	<div class="span3">
+   			<img src="{{ item.item_pic_resized.url }}"/>
+	</div>
+    {% else %}	
+    <div class="span11">
+   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small">comment</span>
+   			<p>{{ item.body }}</p>
+			
+	<div class="row">
+    <div id="comments{{item.id}}" class="span10 offset1">
+
+    {% for comment in item.wallcomment_set.select_related reversed %}
+    	<div class="comment{{item.id}}">
+    	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
+    	</div>
+    {% endfor %}
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="span10 offset1">
+    <div class="comment-error{{item.id}}">
+    </div>
+    </div>
+    </div>
+    
+    <div class="row">
+    <div class="span10 offset1">
+    
+    <div id="comment-form{{item.id}}" class="comment-form{{item.id}}">
+    <form method="POST" action="{% url add_wall_comment item.id %}">{% csrf_token %}
+            <fieldset class="control-group">
+    		<div class="controls">
+       			{{ commentform.comment }}
+    		</div>
+			</fieldset>
+            <input type="hidden" id="id_submit_url{{item.id}}" value="{% url add_wall_comment item.id %}" />
+            <input type="hidden" id="id_object_pk{{item.id}}" value="{{ item.id }}" />
+            <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
+     </form>
+    </div>
+    </div>
+    </div>
+	</div>
+    {% endif %}
+</div>
+	
 <hr/>	
 {% endfor %}
 {% endautoescape %}
@@ -125,7 +162,7 @@
             $('#comment-form{{item.id}}').hide();
             $('#comment-toggle{{item.id}}').click(function() {
                 $('#comment-form{{item.id}}').toggle();
-                $('#comment-form{{item.id}} #id_comment').focus();
+                $('#comment-form{{item.id}} textarea').focus();
                 return false;
             });
         });
