@@ -32,8 +32,6 @@ urlpatterns = patterns("",
     url(r"^announcements/", include("announcements.urls")),
     (r'^messages/', include('django_messages.urls')),
     url(r"^wall/", include("wall.urls")),
-    url(r'^comments/', include('django.contrib.comments.urls')),
-    url(r'^richcomments/', include('richcomments.urls')),
     url(r"^mapview/$", "bikematchapp.views.mapview", name="mapview"),
 )
 
