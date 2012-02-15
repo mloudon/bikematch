@@ -41,7 +41,7 @@
 	<div class="row">
     <div id="comments{{item.id}}" class="span7 offset1">
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment{{item.id}}">
+    	<div class="comment{{item.id}} well">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
     	</div>
     {% endfor %}
@@ -87,7 +87,7 @@
     <div id="comments{{item.id}}" class="span10 offset1">
 
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment{{item.id}}">
+    	<div class="comment{{item.id}} well">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
     	</div>
     {% endfor %}
@@ -183,7 +183,7 @@
 		$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
 			{
 				if (data.success) {
-						comment_html = '<div class=comment'+data.itemid+'>'+
+						comment_html = '<div class="comment'+data.itemid+' well">'+
     					'<b>'+data.author+'</b>, <i>'+data.created_at+'  </i>'+data.comment+
     					'</div>'
     					commentsdiv ='#comments'+data.itemid

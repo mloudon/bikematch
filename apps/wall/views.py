@@ -11,6 +11,7 @@ from wall.forms import WallItemForm, WallItemCommentForm
 from django.utils import simplejson
 import logging, traceback, pprint
 
+@login_required
 def home( request, slug, template_name='wall/home.html'):
     """
     A view that shows all of the wall items.
