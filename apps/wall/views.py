@@ -124,7 +124,7 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
             comment = WallComment( author=request.user, wallitem=wallitem, body=commentbody, created_at=datetime.now() )
             comment.save()
             
-            response_dict.update({'itemid':comment.wallitem.id,'comment': comment.body, 'author': comment.author.get_profile().name,'created_at':comment.created_at.strftime('%b. %d, %Y %I:%M %p') })  #Feb. 14, 2012, 2:02 p.m
+            response_dict.update({'itemid':comment.wallitem.id,'comment': comment.body, 'commentid':comment.id, 'author': comment.author.get_profile().name,'created_at':comment.created_at.strftime('%b. %d, %Y %I:%M %p') })  #Feb. 14, 2012, 2:02 p.m
             response_dict.update({'success': True})
         else:
             print form.errors
@@ -134,3 +134,26 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
             return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
         
         return render_to_response(template_name, { 'commentform': form, 'wallitemid': wallitemid }, context_instance = RequestContext( request ))
+    
+@login_required
+def commentdelete(request, id):
+
+    comment = get_object_or_404( WallItemComment, id=int(id) )
+    success_url = reverse( 'wall_home', args=(item.wall.slug,))
+
+    response_dict = {}
+    response_dict.update({'itemid':id})
+
+    try:
+        comment.delete()
+        response_dict.update({'success': True})
+
+    except:
+        response_dict.update({'success': False})
+
+    if request.is_ajax():
+
+        return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+    
+
+    return HttpResponseRedirect(success_url)

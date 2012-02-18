@@ -25,40 +25,45 @@
 
 {% autoescape off %}
 {% for item in wall.wallitem_set.select_related %}
-	<div class="wallitem">
+	<div class="wallitem deleteable">
 	<div class="row">
 	<div class="span1">
 	<div class="profile-pic">
+	
 	{% if item.author.get_profile.profile_pic_small  %}
-    		<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
+    	<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
     {% else %}	
-    		<p><em>no profile picture yet</em></p>
+    	<p><em>no profile picture yet</em></p>
     {% endif %}
+    
     {% ifequal item.author request.user %}
-     <div class="delete-button">
-    <span id="delete-item{{item.id}}" class="btn small delete-item">delete</span>
+    <div class="delete-button">
+    	<a id="delete-item{{item.id}}" href="{% url delete_wall_item item.id %}" class="btn small delete-item delete-confirm-required">delete</a>
 	</div>
-	<div class="delete-confirm">
-    <p> are you sure? <a href="{% url delete_wall_item item.id %}"  class="delete-confirm-option">yes</a> /
-    <a href="" class="delete-confirm-option">no</a>
-    </div>
 	{% endifequal %}
+    
 	</div>
 	</div>
-	{% if item.item_pic_resized  %}
+	
     <div class="span8">
    			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small comment-toggle">comment</span>
    			<p>{{ item.body }}</p>
 	<div class="row">
     <div id="comments{{item.id}}" class="span7 offset1 comments">
+    
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment well">
+    	<div class="comment well deleteable">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
+    	{% ifequal comment.author request.user %}
+    	<div class="delete-button">
+    		<a id="delete-comment{{item.id}}" href="{% url delete_wall_comment comment.id %}"  class="delete-comment delete-confirm-required">delete</a>
+		</div>
+		{% endifequal%}
     	</div>
     {% endfor %}
-    </div>
-    </div>
     
+    </div>
+    </div>
     <div class="row">
     <div class="span7 offset1">
     <div id="comment-error{{item.id}}" class"comment-error">
@@ -86,52 +91,13 @@
     </div>
     </div>
 	</div>
+	
+	{% if item.item_pic_resized  %}
 	<div class="span3">
    			<img src="{{ item.item_pic_resized.url }}"/>
 	</div>
-    {% else %}	
-    <div class="span11">
-   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small comment-toggle">comment</span>
-   			<p>{{ item.body }}</p>
-			
-	<div class="row">
-    <div id="comments{{item.id}}" class="span10 offset1 comments">
-
-    {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment well">
-    	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
-    	</div>
-    {% endfor %}
-    </div>
-    </div>
+    {% endif %}	
     
-    <div class="row">
-    <div class="span10 offset1">
-    <div id="comment-error{{item.id}}" class"comment-error">
-    </div>
-    </div>
-    </div>
-    
-    <div class="row">
-    <div class="span10 offset1">
-    
-    <div id="comment-form{{item.id}}" class="comment-form">
-    <form method="POST" action="{% url add_wall_comment item.id %}">{% csrf_token %}
-            <fieldset class="control-group">
-    		<div class="comment-form-controls">
-       			{{ commentform.comment }}
-    		</div>
-			</fieldset>
-            <input type="hidden" id="id_submit_url{{item.id}}" class="submit_url" value="{% url add_wall_comment item.id %}" />
-            <input type="hidden" id="id_object_pk{{item.id}}" class="object_pk" value="{{ item.id }}" />
-            <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
-     </form>
-    </div>
-    </div>
-    </div>
-	</div>
-	
-	{% endif %}
 	</div>
 	<hr/>	
 	</div>	
@@ -142,6 +108,7 @@
 {% block extra_body_scripts %}
 
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/wall/deleteconfirm.js"></script>
 
     <script type="text/javascript">
    
@@ -170,7 +137,6 @@
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$("div.comment-form").hide();
-		$("div.delete-confirm").hide();
 		});
     </script>
 	
@@ -197,7 +163,10 @@
 				if (data.success) {
 						comment_html = '<div class="comment well">'+
     					'<b>'+data.author+'</b>, <i>'+data.created_at+'  </i>'+data.comment+
-    					'</div>'
+    					'<div class="delete-button">' +
+    					'<a id="delete-comment'+ data.commentid +'" href="wall/deletecomment/'+ data.commentid  +'"'+
+    					' class="delete-comment delete-confirm-required">delete</a>'+
+						'</div></div>'
     					
     					commentsdiv=$("div.comments",wallitemdiv);
     					commentsdiv.append(comment_html);
@@ -220,41 +189,4 @@
 		});
     </script>
     
-    <script type="text/javascript">
-		$("div.wallitem").delegate("span.delete-item", "click", function() {
-			wallitemdiv = $(this).parents("div.wallitem");
-			$("div.delete-confirm",wallitemdiv).show();
-                return false;
-		});
-    </script>
-    
-    <script type="text/javascript">
-		$("div.delete-confirm").delegate("a.delete-confirm-option", "click", function() {
-			
-			linktext = $(this).text();
-			
-			if (linktext == 'no') {
-				
-				$("div.delete-confirm",wallitemdiv).hide();
-				return false;
-			}
-			
-			submit_url = $(this).attr('href');
-			wallitemdiv = $(this).parents("div.wallitem");
-			
-			$.post(submit_url,{}, function(data)
-			{
-				if (data.success) {
-						wallitemdiv.remove();
-						
-				} else {
-				    
-				}					
-
-			}, "json");
-        	return false;
-		});
-    </script>
-
-
 {% endblock %}

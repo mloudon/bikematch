@@ -1,3 +1,35 @@
+function addDelegates()
+{
+	$('div.delete-confirm').delegate('a.delete-confirm-option', 'click', function() {
+		
+		confirmdiv = $(this).parents('div.delete-confirm');
+		deletediv = $(this).closest('div.deleteable');
+		
+		linktext = $(this).text();
+		
+		if (linktext == 'no') {
+			
+			confirmdiv.hide();
+			return false;
+		}
+		
+		submit_url = $(this).attr('href');
+		
+		
+		$.post(submit_url,{}, function(data)
+		{
+			if (data.success) {
+					deletediv.remove();
+					
+			} else {
+			    
+			}					
+	
+		}, 'json');
+		return false;
+	});
+}
+
 $(document).ready(function() {
 
 	$('a.delete-confirm-required').each( function(index) {
@@ -15,33 +47,7 @@ $(document).ready(function() {
     	
     	return false;
 	});
+	
+	addDelegates();
 	$('div.delete-confirm').hide();
 });
-
-$("div.delete-confirm").delegate("a.delete-confirm-option", "click", function() {
-	
-	confirmdiv = $(this).parents("div.delete-confirm");
-	
-	linktext = $(this).text();
-	
-	if (linktext == 'no') {
-		
-		confirmdiv.hide();
-		return false;
-	}
-	
-	submit_url = $(this).attr('href');
-	
-	
-	$.post(submit_url,{}, function(data)
-	{
-		if (data.success) {
-				wallitemdiv.remove();
-				
-		} else {
-		    
-		}					
-
-	}, "json");
-	return false;
-	});
