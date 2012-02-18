@@ -22,9 +22,10 @@
 </div>
 
 <hr/>
-{% if wall.allow_html %}
+
 {% autoescape off %}
 {% for item in wall.wallitem_set.select_related %}
+	<div class="wallitem">
 	<div class="row">
 	<div class="span1">
 	{% if item.author.get_profile.profile_pic_small  %}
@@ -36,12 +37,12 @@
 	</div>
 	{% if item.item_pic_resized  %}
     <div class="span8">
-   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small">comment</span>
+   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small comment-toggle">comment</span>
    			<p>{{ item.body }}</p>
 	<div class="row">
-    <div id="comments{{item.id}}" class="span7 offset1">
+    <div id="comments{{item.id}}" class="span7 offset1 comments">
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment{{item.id}} well">
+    	<div class="comment well">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
     	</div>
     {% endfor %}
@@ -50,7 +51,7 @@
     
     <div class="row">
     <div class="span7 offset1">
-    <div class="comment-error{{item.id}}">
+    <div id="comment-error{{item.id}}" class"comment-error">
     </div>
     </div>
     </div>
@@ -58,17 +59,17 @@
     <div class="row">
     <div class="span7 offset1">
     
-    <div id="comment-form{{item.id}}" class="comment-form{{item.id}}">
+    <div id="comment-form{{item.id}}" class="comment-form">
     <form method="POST" action="{% url add_wall_comment item.id %}" >{% csrf_token %}
 		
        		<fieldset class="control-group">
-    		<div class="controls">
+    		<div class="comment-form-controls">
        			{{ commentform.comment }}
     		</div>
 			</fieldset>
 
-            <input type="hidden" id="id_submit_url{{item.id}}" value="{% url add_wall_comment item.id %}" />
-            <input type="hidden" id="id_object_pk{{item.id}}" value="{{ item.id }}" />
+            <input type="hidden" id="id_submit_url{{item.id}}"  class="submit_url" value="{% url add_wall_comment item.id %}" />
+            <input type="hidden" id="id_object_pk{{item.id}}" class="object_pk" value="{{ item.id }}" />
             <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
      </form>
     </div>
@@ -80,14 +81,14 @@
 	</div>
     {% else %}	
     <div class="span11">
-   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small">comment</span>
+   			<b>{{ item.author.get_profile.name }}</b>, <i>{{ item.created_at }}  </i><span id="comment-toggle{{item.id}}" class="btn small comment-toggle">comment</span>
    			<p>{{ item.body }}</p>
 			
 	<div class="row">
-    <div id="comments{{item.id}}" class="span10 offset1">
+    <div id="comments{{item.id}}" class="span10 offset1 comments">
 
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment{{item.id}} well">
+    	<div class="comment well">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
     	</div>
     {% endfor %}
@@ -96,7 +97,7 @@
     
     <div class="row">
     <div class="span10 offset1">
-    <div class="comment-error{{item.id}}">
+    <div id="comment-error{{item.id}}" class"comment-error">
     </div>
     </div>
     </div>
@@ -104,28 +105,28 @@
     <div class="row">
     <div class="span10 offset1">
     
-    <div id="comment-form{{item.id}}" class="comment-form{{item.id}}">
+    <div id="comment-form{{item.id}}" class="comment-form">
     <form method="POST" action="{% url add_wall_comment item.id %}">{% csrf_token %}
             <fieldset class="control-group">
-    		<div class="controls">
+    		<div class="comment-form-controls">
        			{{ commentform.comment }}
     		</div>
 			</fieldset>
-            <input type="hidden" id="id_submit_url{{item.id}}" value="{% url add_wall_comment item.id %}" />
-            <input type="hidden" id="id_object_pk{{item.id}}" value="{{ item.id }}" />
+            <input type="hidden" id="id_submit_url{{item.id}}" class="submit_url" value="{% url add_wall_comment item.id %}" />
+            <input type="hidden" id="id_object_pk{{item.id}}" class="object_pk" value="{{ item.id }}" />
             <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
      </form>
     </div>
     </div>
     </div>
 	</div>
-    {% endif %}
-</div>
 	
+	{% endif %}
+	</div>
+	</div>	
 <hr/>	
 {% endfor %}
 {% endautoescape %}
-{% endif %}
 {% endblock %}
 
 {% block extra_body_scripts %}
@@ -156,58 +157,57 @@
 		};
 	</script>
 	
-	{% for item in wall.wallitem_set.select_related %}
-	<script type="text/javascript">
-    	$(document).ready(function() {
-            $('#comment-form{{item.id}}').hide();
-            $('#comment-toggle{{item.id}}').click(function() {
-                $('#comment-form{{item.id}}').toggle();
-                $('#comment-form{{item.id}} textarea').focus();
-                return false;
-            });
-        });
-    </script>
-    
 	<script type="text/javascript">
 	$(document).ready(function() {
-    debug = true;
-    $('div.comment-form{{item.id}} form').submit(function() {
-    	
-    	comment = $('div.comment-form{{item.id}} #id_comment').val()
-		submit_url = $('#id_submit_url{{item.id}}').val();
-		object_pk = $('#id_object_pk{{item.id}}').val();
-		
-		errordiv = 'div.comment-error'+{{item.id}}
-        $('div.comment-error').remove();
-		
-		$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
+		$("div.comment-form").hide();
+		});
+    </script>
+	
+	<script type="text/javascript">
+		$("div.wallitem").delegate("span.comment-toggle", "click", function() {
+			wallitemdiv = $(this).parents("div.wallitem");
+			$("div.comment-form",wallitemdiv).toggle();
+            $("textarea",wallitemdiv).focus();
+                return false;
+		});
+    </script>
+    
+    <script type="text/javascript">
+		$("div.comment-form").delegate("form", "submit", function() {
+			comment = $('#id_comment',this).val();
+			submit_url = $('input.submit_url',this).val();
+			object_pk = $('input.object_pk',this).val();
+			
+			wallitemdiv = $(this).parents("div.wallitem");
+			$("div.comment-error",wallitemdiv).remove();
+			
+			$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
 			{
 				if (data.success) {
-						comment_html = '<div class="comment'+data.itemid+' well">'+
+						comment_html = '<div class="comment well">'+
     					'<b>'+data.author+'</b>, <i>'+data.created_at+'  </i>'+data.comment+
     					'</div>'
-    					commentsdiv ='#comments'+data.itemid
-    					commentdiv ='div.comment'+data.itemid+':last'
-    					commentform ='#comment-form'+data.itemid
-				    	$(commentsdiv).append(comment_html);
-				    	$(commentdiv).show('slow');
-				    	$(commentform).hide();
+    					
+    					commentsdiv=$("div.comments",wallitemdiv);
+    					commentsdiv.append(comment_html);
+				    	commentsdiv.show('slow');
+				    	
+				    	$("div.comment-form",wallitemdiv).hide();
 						
 				} else if (data.errors) {
 				    if (debug) {
-				        $('div.comment-form'+data.itemid).before('<div class="comment-error'+data.itemid+'">' +
+				       $("div.comments",wallitemdiv).before('<div class="comment-error">' +
 				           data.errors+ '</div>');
 				    }
 				} else {
-				     $('div.comment-form'+data.itemid).before('<div class="comment-error'+data.itemid+'">' +
-				           data.errors+ '</div>');
+				     $("div.comments",wallitemdiv).before('<div class="comment-error">' +
+				           'Unknown error'+ '</div>');
 				}					
 
 			}, "json");
         	return false;
-    });
-	});
-	</script>
-	{% endfor %}
+		});
+    </script>
+
 
 {% endblock %}
