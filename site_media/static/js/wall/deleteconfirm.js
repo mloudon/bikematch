@@ -6,23 +6,19 @@ function addDelegates()
 		deletediv = $(this).closest('div.deleteable');
 		
 		linktext = $(this).text();
-		
 		if (linktext == 'no') {
-			
 			confirmdiv.hide();
 			return false;
 		}
 		
 		submit_url = $(this).attr('href');
-		
-		
 		$.post(submit_url,{}, function(data)
 		{
 			if (data.success) {
 					deletediv.remove();
 					
 			} else {
-			    
+			  //add something here  
 			}					
 	
 		}, 'json');

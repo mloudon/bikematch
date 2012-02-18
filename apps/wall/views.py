@@ -138,11 +138,11 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
 @login_required
 def commentdelete(request, id):
 
-    comment = get_object_or_404( WallItemComment, id=int(id) )
-    success_url = reverse( 'wall_home', args=(item.wall.slug,))
+    comment = get_object_or_404( WallComment, id=int(id) )
+    success_url = reverse( 'wall_home', args=(comment.wallitem.wall.slug,))
 
     response_dict = {}
-    response_dict.update({'itemid':id})
+    response_dict.update({'commentid':id})
 
     try:
         comment.delete()
@@ -155,5 +155,4 @@ def commentdelete(request, id):
 
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
     
-
     return HttpResponseRedirect(success_url)
