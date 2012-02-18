@@ -28,12 +28,22 @@
 	<div class="wallitem">
 	<div class="row">
 	<div class="span1">
+	<div class="profile-pic">
 	{% if item.author.get_profile.profile_pic_small  %}
     		<p><img src="{{ item.author.get_profile.profile_pic_small.url }}"/></p>
     {% else %}	
     		<p><em>no profile picture yet</em></p>
     {% endif %}
-    {% ifequal item.author request.user %}<a href="{% url edit_wall_item item.id %}"  class="btn warning small">edit</a>{% endifequal %}
+    {% ifequal item.author request.user %}
+     <div class="delete-button">
+    <span id="delete-item{{item.id}}" class="btn small delete-item">delete</span>
+	</div>
+	<div class="delete-confirm">
+    <p> are you sure? <a href="{% url delete_wall_item item.id %}"  class="delete-confirm-option">yes</a> /
+    <a href="" class="delete-confirm-option">no</a>
+    </div>
+	{% endifequal %}
+	</div>
 	</div>
 	{% if item.item_pic_resized  %}
     <div class="span8">
@@ -123,8 +133,8 @@
 	
 	{% endif %}
 	</div>
+	<hr/>	
 	</div>	
-<hr/>	
 {% endfor %}
 {% endautoescape %}
 {% endblock %}
@@ -160,6 +170,7 @@
 	<script type="text/javascript">
 	$(document).ready(function() {
 		$("div.comment-form").hide();
+		$("div.delete-confirm").hide();
 		});
     </script>
 	
@@ -202,6 +213,42 @@
 				} else {
 				     $("div.comments",wallitemdiv).before('<div class="comment-error">' +
 				           'Unknown error'+ '</div>');
+				}					
+
+			}, "json");
+        	return false;
+		});
+    </script>
+    
+    <script type="text/javascript">
+		$("div.wallitem").delegate("span.delete-item", "click", function() {
+			wallitemdiv = $(this).parents("div.wallitem");
+			$("div.delete-confirm",wallitemdiv).show();
+                return false;
+		});
+    </script>
+    
+    <script type="text/javascript">
+		$("div.delete-confirm").delegate("a.delete-confirm-option", "click", function() {
+			
+			linktext = $(this).text();
+			
+			if (linktext == 'no') {
+				
+				$("div.delete-confirm",wallitemdiv).hide();
+				return false;
+			}
+			
+			submit_url = $(this).attr('href');
+			wallitemdiv = $(this).parents("div.wallitem");
+			
+			$.post(submit_url,{}, function(data)
+			{
+				if (data.success) {
+						wallitemdiv.remove();
+						
+				} else {
+				    
 				}					
 
 			}, "json");

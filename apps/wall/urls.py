@@ -5,5 +5,5 @@ urlpatterns = patterns('',
     url(r'^recent/(?P<slug>[-\w]+)/$', 'wall.views.home', { 'template_name':'wall/recent.html' }, name="wall_recent"),
     url(r'^add/(?P<slug>[-\w]+)/$', 'wall.views.add', name="add_wall_item"),
     url(r'^addcomment/(?P<wallitemid>[-\d]+)/$', 'wall.views.commentadd', name="add_wall_comment"),
-    url(r'^edit/(?P<id>\d+)/$', 'wall.views.edit', name="edit_wall_item"),
+    url(r'^delete/(?P<id>\d+)/$', 'wall.views.delete', name="delete_wall_item"),
 )

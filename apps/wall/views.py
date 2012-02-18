@@ -27,7 +27,7 @@ def home( request, slug, template_name='wall/home.html'):
         context_instance = RequestContext( request ))
 
 @login_required
-def add( request, slug, form_class=WallItemForm,
+def add(request, slug, form_class=WallItemForm,
             template_name='wall/home.html',
             success_url=None, can_add_check=None):
     """
@@ -75,44 +75,27 @@ def add( request, slug, form_class=WallItemForm,
         context_instance = RequestContext( request ))
 
 @login_required
-def edit( request, id, form_class=WallItemForm,
-            template_name='wall/edit.html',
-            success_url=None, can_edit_check=None):
-    """
-    A view for editing a WallItem.
+def delete(request, id):
 
-    The optional 'can_edit_check' callback passes you a user and an item.
-      Return True if the user is authorized and False otherwise.
-      (Default: only the item author is allowed to edit the item.)
-    """
     item = get_object_or_404( WallItem, id=int(id) )
-    if success_url == None:
-        success_url = reverse( 'wall_home', args=(item.wall.slug,))
-    if request.method == 'POST':
-        form = form_class(request.POST)
-        if form.is_valid():
-            posting = form.cleaned_data['posting']
-            if len(posting) > item.wall.max_item_length:
-                body = posting[:item.wall.max_item_length]
-            else:
-                body = posting       
-            item.body = body
-            item.save()
-            return HttpResponseRedirect(success_url)
-    else:
-        if can_edit_check != None:
-            allowed = can_edit_check( request.user, item )
-        else:
-            allowed = (request.user == item.author)
-        if not allowed:
-            request.user.message_set.create(
-                message='You do not have permission to edit that item.')
-            return HttpResponseRedirect(success_url)
-        form = form_class( help_text="Edit this item.<br/>(HTML tags will %sbe ignored. The item will be trimmed to %d characters.)" % ("not " if item.wall.allow_html else "", item.wall.max_item_length))
-        form.fields['posting'].initial = item.body
-    return render_to_response(template_name,
-        { 'form': form, 'item': item, 'wall': item.wall },
-        context_instance = RequestContext( request ))
+    success_url = reverse( 'wall_home', args=(item.wall.slug,))
+
+    response_dict = {}
+    response_dict.update({'itemid':id})
+
+    try:
+        item.delete()
+        response_dict.update({'success': True})
+
+    except:
+        response_dict.update({'success': False})
+
+    if request.is_ajax():
+
+        return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+    
+
+    return HttpResponseRedirect(success_url)
     
 @login_required
 def commentadd( request, wallitemid, form_class=WallItemCommentForm,
