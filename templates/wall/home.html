@@ -163,7 +163,7 @@
 			$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
 			{
 				if (data.success) {
-						comment_html = '<div class="comment well">'+
+						comment_html = '<div id=comment"'+ data.commentid  +'" class="comment well">'+
     					'<b>'+data.author+'</b>, <i>'+data.created_at+'  </i>'+data.comment+
     					'<div class="delete-button">' +
     					'<a id="delete-comment'+ data.commentid +'" href="/wall/deletecomment/'+ data.commentid  +'"'+
@@ -173,6 +173,16 @@
     					commentsdiv=$("div.comments",wallitemdiv);
     					commentsdiv.append(comment_html);
 				    	commentsdiv.show('slow');
+				    	
+				    	addedcommentid = "#comment"+data.commentid;
+				    	addedcommentdiv = $(addedcommentid);
+				    	
+				    	addDeleteConfirm($("a.delete-confirm-required:last",commentsdiv));
+				    	
+						$('a.delete-confirm-option',addedcommentdiv).on('click', function(event) {
+							event.preventDefault();
+							addDeleteConfirmHandler($(this));
+						});
 				    	
 				    	$("div.comment-form",wallitemdiv).hide();
 						

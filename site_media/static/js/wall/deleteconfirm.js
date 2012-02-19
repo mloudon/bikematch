@@ -1,16 +1,14 @@
-function addDelegates()
+function addDeleteConfirmHandler(deleteconfirmbutton)
 {
-	$('div.delete-confirm').delegate('a.delete-confirm-option', 'click', function(event) {
-		event.preventDefault();
-		confirmdiv = $(this).parents('div.delete-confirm');
-		deletediv = $(this).closest('div.deleteable');
+		confirmdiv = deleteconfirmbutton.parents('div.delete-confirm');
+		deletediv = deleteconfirmbutton.closest('div.deleteable');
 		
-		linktext = $(this).text();
+		linktext = deleteconfirmbutton.text();
 		if (linktext == 'no') {
 			confirmdiv.hide();
 		}
 		else {
-			submit_url = $(this).attr('href');
+			submit_url = deleteconfirmbutton.attr('href');
 				$.post(submit_url,{}, function(data)
 				{
 					if (data.success) {
@@ -22,27 +20,36 @@ function addDelegates()
 			
 				}, 'json');
 		}
+}
+
+function addDeleteConfirm(deletebutton)
+{
+	submit_url = deletebutton.attr('href');
+	confirm_html = '<div class="delete-confirm">'
+		+ '<p> are you sure? <a href="'+ submit_url +'" class="delete-confirm-option">yes</a> /'
+		+ ' <a href="" class="delete-confirm-option">no</a></div>'
+	deletebutton.after(confirm_html);
+	
+	deletebutton.click(function(event) {
+		event.preventDefault();
+		parentdiv = $(this).parent('div');
+		deleteconfirmdiv = $('div.delete-confirm',parentdiv);
+		deleteconfirmdiv.show();
 	});
+	
+	parentdiv = deletebutton.parent('div');
+	$('div.delete-confirm',parentdiv).hide();
 }
 
 $(document).ready(function() {
 
 	$('a.delete-confirm-required').each( function(index) {
-
-		submit_url = $(this).attr('href');
-		confirm_html = '<div class="delete-confirm">'
-    		+ '<p> are you sure? <a href="'+ submit_url +'" class="delete-confirm-option">yes</a> /'
-    		+ ' <a href="" class="delete-confirm-option">no</a></div>'
-		$(this).after(confirm_html);
-		
-		$(this).click(function(event) {
-       		event.preventDefault();
-       		parentdiv = $(this).parent('div');
-			$('div.delete-confirm',parentdiv).show();
-    	});
-    	
+		addDeleteConfirm($(this));
 	});
 	
-	addDelegates();
-	$('div.delete-confirm').hide();
+	$('a.delete-confirm-option').on('click', function(event) {
+		event.preventDefault();
+		addDeleteConfirmHandler($(this));
+	});
+	
 });
