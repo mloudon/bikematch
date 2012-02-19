@@ -54,11 +54,13 @@
     {% for comment in item.wallcomment_set.select_related reversed %}
     	<div class="comment well deleteable">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
+    	
     	{% ifequal comment.author request.user %}
     	<div class="delete-button">
     		<a id="delete-comment{{item.id}}" href="{% url delete_wall_comment comment.id %}"  class="delete-comment delete-confirm-required">delete</a>
 		</div>
 		{% endifequal%}
+    	
     	</div>
     {% endfor %}
     
