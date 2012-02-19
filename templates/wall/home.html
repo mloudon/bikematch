@@ -52,7 +52,7 @@
     <div id="comments{{item.id}}" class="span7 offset1 comments">
     
     {% for comment in item.wallcomment_set.select_related reversed %}
-    	<div class="comment well deleteable">
+    	<div id="comment{{comment.id}}" class="comment well deleteable">
     	<b>{{ comment.author.get_profile.name }}</b>, <i>{{ comment.created_at }}</i>{{ comment.body }}
     	
     	{% ifequal comment.author request.user %}
@@ -111,6 +111,7 @@
 
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="{{ STATIC_URL }}/js/wall/deleteconfirm.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}/js/wall/comments.js"></script>
 
     <script type="text/javascript">
    
@@ -129,76 +130,10 @@
     <script type="text/javascript">
 		window.onload = function()
 		{
-			CKEDITOR.replace('id_posting', 
-				{
+			CKEDITOR.replace('id_posting', {
 					toolbar : 'Basic'
 				});
 		};
 	</script>
 	
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$("div.comment-form").hide();
-		});
-    </script>
-	
-	<script type="text/javascript">
-		$("div.wallitem").delegate("span.comment-toggle", "click", function() {
-			wallitemdiv = $(this).parents("div.wallitem");
-			$("div.comment-form",wallitemdiv).toggle();
-            $("textarea",wallitemdiv).focus();
-                return false;
-		});
-    </script>
-    
-    <script type="text/javascript">
-		$("div.comment-form").delegate("form", "submit", function() {
-			comment = $('#id_comment',this).val();
-			submit_url = $('input.submit_url',this).val();
-			object_pk = $('input.object_pk',this).val();
-			
-			wallitemdiv = $(this).parents("div.wallitem");
-			$("div.comment-error",wallitemdiv).remove();
-			
-			$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
-			{
-				if (data.success) {
-						comment_html = '<div id=comment"'+ data.commentid  +'" class="comment well">'+
-    					'<b>'+data.author+'</b>, <i>'+data.created_at+'  </i>'+data.comment+
-    					'<div class="delete-button">' +
-    					'<a id="delete-comment'+ data.commentid +'" href="/wall/deletecomment/'+ data.commentid  +'"'+
-    					' class="delete-comment delete-confirm-required">delete</a>'+
-						'</div></div>'
-    					
-    					commentsdiv=$("div.comments",wallitemdiv);
-    					commentsdiv.append(comment_html);
-				    	commentsdiv.show('slow');
-				    	
-				    	addedcommentid = "#comment"+data.commentid;
-				    	addedcommentdiv = $(addedcommentid);
-				    	
-				    	addDeleteConfirm($("a.delete-confirm-required:last",commentsdiv));
-				    	
-						$('a.delete-confirm-option',addedcommentdiv).on('click', function(event) {
-							event.preventDefault();
-							addDeleteConfirmHandler($(this));
-						});
-				    	
-				    	$("div.comment-form",wallitemdiv).hide();
-						
-				} else if (data.errors) {
-				    if (debug) {
-				       $("div.comments",wallitemdiv).before('<div class="comment-error">' +
-				           data.errors+ '</div>');
-				    }
-				} else {
-				     $("div.comments",wallitemdiv).before('<div class="comment-error">' +
-				           'Unknown error'+ '</div>');
-				}					
-
-			}, "json");
-        	return false;
-		});
-    </script>
-    
 {% endblock %}

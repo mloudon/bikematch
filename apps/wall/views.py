@@ -139,6 +139,7 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
 def commentdelete(request, id):
 
     comment = get_object_or_404( WallComment, id=int(id) )
+    
     success_url = reverse( 'wall_home', args=(comment.wallitem.wall.slug,))
 
     response_dict = {}

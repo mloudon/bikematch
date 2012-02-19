@@ -37,19 +37,19 @@ function addDeleteConfirm(deletebutton)
 		deleteconfirmdiv.show();
 	});
 	
-	parentdiv = deletebutton.parent('div');
-	$('div.delete-confirm',parentdiv).hide();
+	deleteconfirmdiv = $('div.delete-confirm',deletebutton.parent('div'));
+	deleteconfirmdiv.hide();
+	
+	$('a.delete-confirm-option',deleteconfirmdiv).on('click', function(event) {
+		event.preventDefault();
+		addDeleteConfirmHandler($(this));
+	});
 }
 
 $(document).ready(function() {
 
 	$('a.delete-confirm-required').each( function(index) {
 		addDeleteConfirm($(this));
-	});
-	
-	$('a.delete-confirm-option').on('click', function(event) {
-		event.preventDefault();
-		addDeleteConfirmHandler($(this));
 	});
 	
 });
