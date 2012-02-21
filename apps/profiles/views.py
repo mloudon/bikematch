@@ -190,6 +190,7 @@ class ProfileDetailView(DetailView):
             "is_me": is_me,
             "page_user": self.page_user,
             "profiles": profiles,
+            "API_KEY": settings.GOOGLE_MAPS_API_PASSWORD,
             'form': MapForm(initial={'map': self.get_map(self.get_object())})
         })
         
@@ -240,6 +241,7 @@ class ProfileCreateView(CreateView):
             super(ProfileCreateView, self).get_context_data(**kwargs)
         )
         ctx["profile_form"] = ctx["form"]
+        ctx.update({"API_KEY": settings.GOOGLE_MAPS_API_PASSWORD})
         return ctx
     
     def get_success_url(self):
@@ -291,6 +293,7 @@ class ProfileUpdateView(UpdateView):
             super(ProfileUpdateView, self).get_context_data(**kwargs)
         )
         ctx["profile_form"] = ctx["form"]
+        ctx.update({"API_KEY": settings.GOOGLE_MAPS_API_PASSWORD})
         return ctx
     
     def form_valid(self, form):

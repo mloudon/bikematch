@@ -4,7 +4,7 @@
 
 {% block head_title %}{% trans "Edit Profile" %}{% endblock %}
 {% block extra_head %}
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA-4r90Kb_dOUZqomVKEBOpRQZWni6wDlQbuSEPT7B-GvxWEumHBSCpYF-GOX_MDMRQBxvS9WaCbOayw" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{API_KEY}}" type="text/javascript"></script>
 {% endblock %}
 {% block body_onload%}load_location(){% endblock %}
 {% block body %}
