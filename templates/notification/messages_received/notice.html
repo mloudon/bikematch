@@ -1,0 +1,5 @@
+{% load i18n %}
+{% blocktrans with message.get_absolute_url as message_url and message.sender.get_profile.name  as message_sender %}
+
+You have received the message <a href="{{ message_url }}">{{ message }}</a> from {{ message_sender }}.
+{% endblocktrans %}

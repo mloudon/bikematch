@@ -1,10 +1,11 @@
-{% load i18n %}{% blocktrans with message.recipient.username as recipient and message.sender.username as sender%}Hello {{ recipient }},
+{% load i18n %}{% blocktrans with message.recipient.get_profile.name as recipient and message.sender.get_profile.name as sender%}Hello {{ recipient }},
 
 you received a private message from {{ sender }} with
 the following contents:{% endblocktrans %}
 
 {{ message.body|safe }}
 
+To reply, click <a href="{{ site_url }}{% url messages_reply message.pk %}">here</a>
 --
 {% blocktrans %}Sent from {{ site_url }}{% endblocktrans %}
 {% trans "Inbox" %}: {{ site_url }}{% url messages_inbox %}
