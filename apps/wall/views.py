@@ -61,14 +61,6 @@ def add(request, slug, form_class=WallItemForm,
             print 'errors'
             print form.errors
     else:
-        if can_add_check != None:
-            allowed = can_add_check( request.user, wall )
-        else:
-            allowed = True
-        if not allowed:
-            request.user.message_set.create(
-                message='You do not have permission to add an item to this wall.')
-            return HttpResponseRedirect(success_url)
         form = form_class( help_text="Input text for a new item.<br/>(HTML tags will %sbe ignored. The item will be trimmed to %d characters.)" % ("not " if wall.allow_html else "", wall.max_item_length))
     return render_to_response(template_name,
         { 'form': form, 'wall': wall },
@@ -79,22 +71,24 @@ def delete(request, id):
 
     item = get_object_or_404( WallItem, id=int(id) )
     success_url = reverse( 'wall_home', args=(item.wall.slug,))
-
+    
     response_dict = {}
     response_dict.update({'itemid':id})
-
-    try:
-        item.delete()
-        response_dict.update({'success': True})
-
-    except:
+    
+    if not item.deleteable_by(request.user):
         response_dict.update({'success': False})
+    
+    else:
+        try:
+            item.deleted = True
+            item.save()
+            response_dict.update({'success': True})
+        except:
+            response_dict.update({'success': False})
 
     if request.is_ajax():
-
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
     
-
     return HttpResponseRedirect(success_url)
     
 @login_required
@@ -112,9 +106,7 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
 
     else:
         form = form_class(request.POST)
-        
         wallitem = get_object_or_404( WallItem, id=wallitemid )
-        
         response_dict = {}
             
         if form.is_valid():
@@ -139,21 +131,24 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
 def commentdelete(request, id):
 
     comment = get_object_or_404( WallComment, id=int(id) )
-    
     success_url = reverse( 'wall_home', args=(comment.wallitem.wall.slug,))
 
     response_dict = {}
     response_dict.update({'commentid':id})
-
-    try:
-        comment.delete()
-        response_dict.update({'success': True})
-
-    except:
+    
+    if not comment.deleteable_by(request.user):
         response_dict.update({'success': False})
+        
+    else:
+        try:
+            comment.deleted = True
+            comment.save()
+            response_dict.update({'success': True})
+    
+        except:
+            response_dict.update({'success': False})
 
     if request.is_ajax():
-
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
     
     return HttpResponseRedirect(success_url)

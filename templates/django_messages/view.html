@@ -2,20 +2,37 @@
 {% load i18n %} 
 {% block body %}
 <h1>{% trans "View Message" %}</h1>
-<dl class="message-headers">
-    <dt>{% trans "Subject" %}</dt>
-    <dd><strong>{{ message.subject }}</strong></dd>
-    <dt>{% trans "Sender" %}</dt>
-    <dd>{{ message.sender }}</dd>
-    <dt>{% trans "Date" %} </dt>
-    <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd>
-    <dt>{% trans "Recipient" %}</dt>
-    <dd>{{ message.recipient }}</dd>
-</dl>
-{{ message.body|linebreaksbr }}<br /><br />
-
+<div class="message-headers">
+	<table>
+	<tr>
+    <td>{% trans "Subject" %}</td>
+    <td><strong>{{ message.subject }}</strong></td>
+    </tr>
+    <tr>
+    <td>{% trans "From" %}</td>
+    <td>{{ message.sender.get_profile.name }}</td>
+    </tr>
+    <tr>
+    <td>{% trans "To:" %}</td>
+    <td>{{ message.recipient.get_profile.name }}</td>
+    </tr>
+    <tr>
+    <td>{% trans "Date" %} </td>
+    <td>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</td>
+    </tr>
+    </table>
+</div>
+<div class="message-body well">
+{{ message.body|linebreaksbr }}
+</div>
+<div class="row">
+<div class="span1">
 {% ifequal message.recipient.pk user.pk %}
-<a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>
+<a href="{% url messages_reply message.id %}" class="btn">{% trans "Reply" %}</a>
 {% endifequal %}
-<a href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+</div>
+<div class="span1 offset9">
+<a href="{% url messages_delete message.id %}" class="btn danger">{% trans "Delete" %}</a>
+</div>
+</div>
 {% endblock %}

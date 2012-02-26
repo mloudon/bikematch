@@ -17,6 +17,7 @@ class WallComment(models.Model):
     author     = models.ForeignKey(User, related_name="wall_comment_author")
     body       = models.TextField(_('item_body'))
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
+    deleted = models.BooleanField(default=False)
     
     class Meta:
         verbose_name        = _('wallitemcomment')
@@ -24,6 +25,9 @@ class WallComment(models.Model):
         ordering            = ('-created_at',) 
         get_latest_by       = 'created_at'
 
+    def deleteable_by(self, user):
+        return user == self.author or user.is_superuser
+    
     def __unicode__(self):
          return 'comment on wall item created by %s on %s ( %s )' % ( self.author.username, self.created_at, truncatewords(self.body, 9 ))
 
@@ -35,6 +39,7 @@ class WallItem(models.Model):
     author     = models.ForeignKey(User, related_name="wall_item_author")
     body       = models.TextField(_('item_body'))
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
+    deleted = models.BooleanField(default=False)
     item_pic = models.ImageField(upload_to='upload',null=True,)
     item_pic_resized = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
             resize.Crop(300, 300)], image_field='item_pic',
@@ -45,6 +50,12 @@ class WallItem(models.Model):
         verbose_name_plural = _('wallitems')
         ordering            = ('-created_at',) 
         get_latest_by       = 'created_at'
+        
+    def deleteable_by(self, user):
+        return user == self.author or user.is_superuser
+    
+    def active_comments_set(self):
+        return WallComment.objects.filter(wallitem=self, deleted=False)
 
     def __unicode__(self):
         return 'wall item created by %s on %s ( %s )' % ( self.author.username, self.created_at, truncatewords(self.body, 9 ))
@@ -77,6 +88,9 @@ class Wall(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+    def active_items_set(self):
+        return WallItem.objects.filter(wall=self, deleted=False)
 
     def get_recent_items( self, amount=5, days=7):
         """
