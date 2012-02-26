@@ -42,7 +42,7 @@ class WallItem(models.Model):
     deleted = models.BooleanField(default=False)
     item_pic = models.ImageField(upload_to='upload',null=True,)
     item_pic_resized = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
-            resize.Crop(300, 300)], image_field='item_pic',
+            resize.Fit(300, 300)], image_field='item_pic',
             format='JPEG', options={'quality': 90})
 
     class Meta:
