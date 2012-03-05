@@ -37,10 +37,10 @@ class Border(object):
     
 
 class Profile(ProfileBase):
-    name = models.CharField(_("Name"), max_length=50, null=True, blank=True)
-    about = models.TextField(_("About"), null=True, blank=True)
+    name = models.CharField(_("Display name"), max_length=50, null=True, blank=True, help_text='This will be shown to others when you use the site')
+    about = models.TextField(_("About"), null=True, blank=True, help_text='Tell others about yourself, your gear, or your ride')
     
-    profile_pic = models.ImageField(upload_to='upload',null=True,)
+    profile_pic = models.ImageField(upload_to='upload',null=True, help_text="A picture of yourself, your bike, or something else")
     profile_pic_med = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
             resize.Crop(80, 80)], image_field='profile_pic',
             format='JPEG', options={'quality': 90})

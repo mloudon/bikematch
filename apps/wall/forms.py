@@ -29,7 +29,7 @@ class WallItemCommentForm(forms.Form):
     """
     This form collects a comment.
     """
-    comment = forms.CharField(label=_(u"Comment:"),
+    comment = forms.CharField(label=_(u"Comment:"),max_length = 500,
         widget=forms.Textarea(attrs={'rows': '3'}))
 
     def __init__(self, *args, **kwargs):

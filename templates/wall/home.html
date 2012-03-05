@@ -66,13 +66,7 @@
     
     </div>
     </div>
-    <div class="row">
-    <div class="span7 offset1">
-    <div id="comment-error{{item.id}}" class"comment-error">
-    </div>
-    </div>
-    </div>
-    
+
     <div class="row">
     <div class="span7 offset1">
     
@@ -82,9 +76,13 @@
        		<fieldset class="control-group">
     		<div class="comment-form-controls">
        			{{ commentform.comment }}
+       			{{ commentform.comment.help_text }}
     		</div>
 			</fieldset>
-
+			
+			<div id="comment-error{{item.id}}" class="comment-error" style="display:none">
+    		</div>
+			<br />
             <input type="hidden" id="id_submit_url{{item.id}}"  class="submit_url" value="{% url add_wall_comment item.id %}" />
             <input type="hidden" id="id_object_pk{{item.id}}" class="object_pk" value="{{ item.id }}" />
             <input id="submit-comment" type="submit" class="btn primary small" value="{% trans 'Post comment' %}" />
@@ -92,6 +90,7 @@
     </div>
     </div>
     </div>
+      
 	</div>
 	
 	{% if item.item_pic_resized  %}

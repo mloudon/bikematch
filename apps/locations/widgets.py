@@ -44,6 +44,7 @@ MEDIA_PREFIX = getattr(settings, 'GMAPI_MEDIA_PREFIX', 'gmapi/')
     
 class LocationWidget(forms.widgets.Widget):
     def __init__(self, *args, **kw):
+        
         self.map_width = kw.get("map_width", DEFAULT_WIDTH)
         self.map_height = kw.get("map_height", DEFAULT_HEIGHT)
         self.map_zoom = kw.get("map_zoom", DEFAULT_ZOOM)
@@ -126,6 +127,9 @@ class LocationWidget(forms.widgets.Widget):
         html = self.inner_widget.render("%s" % name, "%f,%f" % (lat,lng), dict(id='id_%s' % name))
         html += "<div id=\"map_%s\" class=\"gmap\" style=\"width: %dpx; height: %dpx\"></div>" % (name, self.map_width, self.map_height)
         
+        help_text = "Drag the marker to select your location"
+        html +='<span class="help-block"> %s </span>' % help_text
+        
         return mark_safe(js+html)
 
 
@@ -133,7 +137,6 @@ class LocationField(forms.Field):
     widget = LocationWidget
 
     def clean(self, value):
-        
         if isinstance(value, unicode):
             a, b = value.split(',')
             
@@ -141,7 +144,6 @@ class LocationField(forms.Field):
             a, b = value
         
         lat, lng = float(a), float(b)
-        
         return Location.objects.create(latitude = lat, longitude = lng, automatic = True)
 
 class GoogleMap(Widget):

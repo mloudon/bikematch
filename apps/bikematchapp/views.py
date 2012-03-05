@@ -73,7 +73,7 @@ def mapview(request, template_name='bikematchapp/mapview.html'):
             maps.event.addListener(marker, 'mouseout', 'myobj.markerOut')
             maps.event.addListener(marker, 'click', 'myobj.onClick')
             
-            contentString = '<div class="row"><div class="span2"><img src="%s"/></div><div class="span2"><p><strong>%s</strong></p><p>%s</p></div></div>' % (escape(profile.profile_pic_med.url),escape(profile.name),escape(profile.about))
+            contentString = '<div class="row"><div class="span2"><img src="%s"/></div><div class="span2"><p><strong>%s</strong></p><p>%s</p></div></div>' % (escape(profile.profile_pic_med.url),escape(profile.name),escape(profile.about[:40]))
     
             info = maps.InfoWindow({
                                     'content': contentString,

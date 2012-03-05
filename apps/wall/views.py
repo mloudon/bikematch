@@ -45,7 +45,8 @@ def add(request, slug, form_class=WallItemForm,
         if form.is_valid():
             posting = form.cleaned_data['posting']
             
-            if len(posting) > wall.max_item_length:
+            
+            if (wall.max_item_length) and (len(posting) > wall.max_item_length):
                 body = posting[:wall.max_item_length]
             else:
                 body = posting
@@ -108,10 +109,18 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
         form = form_class(request.POST)
         wallitem = get_object_or_404( WallItem, id=wallitemid )
         response_dict = {}
+        response_dict.update({'itemid':wallitem.id})
             
         if form.is_valid():
             
             commentbody = form.cleaned_data['comment']
+            
+            max_length = WallComment._meta.get_field('body').max_length
+            
+            if (len(commentbody) > max_length):
+                commentbody = commentbody[:max_length]
+            else:
+                commentbody = commentbody
             
             comment = WallComment( author=request.user, wallitem=wallitem, body=commentbody, created_at=datetime.now() )
             comment.save()

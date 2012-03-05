@@ -21,7 +21,7 @@ class WallComment(models.Model):
     """
     wallitem   = models.ForeignKey('WallItem')
     author     = models.ForeignKey(User, related_name="wall_comment_author")
-    body       = models.TextField(_('item_body'))
+    body       = models.TextField(_('item_body'),max_length=500, help_text='500 characters max')
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
     deleted = models.BooleanField(default=False)
     
@@ -85,7 +85,7 @@ class Wall(models.Model):
     name = models.CharField(_('name'), max_length=80)
     slug = models.SlugField(_("slug"), unique=True )
     max_items = models.IntegerField( default=50 )
-    max_item_length = models.IntegerField( default = 250 )
+    max_item_length = models.IntegerField( default = None, null=True )
     allow_html = models.BooleanField( default=False )
 
     class Meta:

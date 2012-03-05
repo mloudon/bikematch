@@ -11,6 +11,11 @@ $("div.wallitem").delegate("span.comment-toggle", "click", function() {
     return false;
 });
 
+$("div.comment-form").delegate("textarea", "click", function() {
+	wallitemdiv = $(this).parents("div.wallitem");
+	$("div.comment-error",wallitemdiv).hide();
+});
+
 
 $("div.comment-form").delegate("form", "submit", function() {
 	comment = $('#id_comment',this).val();
@@ -18,7 +23,9 @@ $("div.comment-form").delegate("form", "submit", function() {
 	object_pk = $('input.object_pk',this).val();
 	
 	wallitemdiv = $(this).parents("div.wallitem");
-	$("div.comment-error",wallitemdiv).remove();
+	
+	errordiv = $(wallitemdiv > "div.comment-error")
+	errordiv.hide();
 	
 	$.post(submit_url, {comment: comment,wallitemid: object_pk}, function(data)
 	{
@@ -39,13 +46,17 @@ $("div.comment-form").delegate("form", "submit", function() {
 		    	$("div.comment-form",wallitemdiv).hide();
 				
 		} else if (data.errors) {
-		    if (debug) {
-		       $("div.comments",wallitemdiv).before('<div class="comment-error">' +
-		           data.errors+ '</div>');
-		    }
-		} else {
-		     $("div.comments",wallitemdiv).before('<div class="comment-error">' +
-		           'Unknown error'+ '</div>');
+			errors = eval(data.errors);
+			errorhtml="";
+			$.each(errors,function(fieldname,errmsg)
+			{
+				errorhtml = errorhtml + errmsg;
+			});
+		    
+		    errordiv_id = "#comment-error" + data.itemid;
+		    $(errordiv_id).html(errorhtml);
+			$(errordiv_id).show();
+
 		}					
 
 	}, "json");
