@@ -1,0 +1,6 @@
+{% load i18n %}
+{% blocktrans with comment_author as comment_author and comment_body as comment_body%}
+{{ comment_author }} commented on your wall post:
+
+"{{ comment_body}}"
+{% endblocktrans %}

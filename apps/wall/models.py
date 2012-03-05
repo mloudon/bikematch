@@ -8,7 +8,13 @@ from django.template.defaultfilters import truncatewords
 from imagekit.models import ImageSpec
 from imagekit.processors import resize, Adjust
 
-
+from django.db.models import signals
+from django.dispatch import receiver
+if "notification" in settings.INSTALLED_APPS:
+    from notification import models as notification
+else:
+    notification = None
+                        
 class WallComment(models.Model):
     """
     A comment on a wall post.
@@ -105,4 +111,18 @@ class Wall(models.Model):
         td = timedelta(days=days)
         dt = datetime.now() - td
         return WallItem.objects.filter(wall=self,created_at__gt=dt)[:amount]
+    
+    
+@receiver(signals.post_save, sender=WallComment)
+def notify_comment(sender, **kwargs):
+    comment = kwargs['instance']
+    if (not comment.deleted) and (not (comment.author == comment.wallitem.author)):
+        if notification:
+            data = {'comment_body': comment.body,'comment_author': comment.author.get_profile().name,}
+            notification.send([comment.wallitem.author], "wall_new_comment_your_post", data)
+            
+            for comm in comment.wallitem.active_comments_set():
+                if not (comm.author == comment.author):
+                    notification.send([comm.author], "wall_new_comment_your_comment", data)
+ 
 
