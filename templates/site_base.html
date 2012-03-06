@@ -6,11 +6,10 @@
 
 {% block nav %}
     {% if user.is_authenticated %}
-        <ul>{% spaceless %}
+        <ul class="nav pull-left">{% spaceless %}
             <li id="tab_wall"><a href="/wall/wall/">{% trans "Wall" %}</a></li>
             <li id="tab_map"><a href="/mapview/">{% trans "Map" %}</a></li>
-            <li id="tab_messages"><a href="/messages/inbox">{% trans "Messages" %} ({% inbox_count %})</a></li>
-        {% endspaceless %}</ul>
+         {% endspaceless %}</ul>
     {% endif %}
 {% endblock %}
 

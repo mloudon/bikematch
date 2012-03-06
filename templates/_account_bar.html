@@ -1,6 +1,11 @@
+{% load inbox %}
+
 <ul class="secondary-nav">
     {% if user.is_authenticated %}
-        <li>
+
+         <li id="tab_messages"><a href="/messages/inbox">Inbox ({% inbox_count %})</a></li>
+         <li class="divider-vertical"></li>
+         <li>
             <a href="#" class="menu">{{ user }}</a>
             <ul class="menu-dropdown">
             	<li><a href="{% url profile_detail user.username %}">My Profile</a></li>

@@ -211,6 +211,8 @@ ACCOUNT_EMAIL_VERIFICATION = False
 ACCOUNT_EMAIL_AUTHENTICATION = False
 ACCOUNT_UNIQUE_EMAIL = EMAIL_CONFIRMATION_UNIQUE_EMAIL = False
 
+CONTACT_EMAIL = 'uscbikecommuters@gmail.com'
+
 AUTHENTICATION_BACKENDS = [
     "pinax.apps.account.auth_backends.AuthenticationBackend",
 ]
