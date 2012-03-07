@@ -9,7 +9,7 @@ from pinax.apps.account.openid_consumer import PinaxConsumer
 from profiles.views import ProfileCreateView, ProfileUpdateView
 from profiles.forms import EditProfileForm, CreateProfileForm
 
-from bikematchapp.views import mapview
+from bikematchapp.views import mapview, resources
 
 
 
@@ -33,6 +33,7 @@ urlpatterns = patterns("",
     (r'^messages/', include('django_messages.urls')),
     url(r"^wall/", include("wall.urls")),
     url(r"^mapview/$", "bikematchapp.views.mapview", name="mapview"),
+    url(r"^resources/$", resources, name="resources"),
 )
 
 

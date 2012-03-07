@@ -21,7 +21,7 @@ class WallComment(models.Model):
     """
     wallitem   = models.ForeignKey('WallItem')
     author     = models.ForeignKey(User, related_name="wall_comment_author")
-    body       = models.TextField(_('item_body'),max_length=500, help_text='500 characters max')
+    body       = models.TextField(_('item_body'))
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
     deleted = models.BooleanField(default=False)
     
@@ -122,7 +122,7 @@ def notify_comment(sender, **kwargs):
             notification.send([comment.wallitem.author], "wall_new_comment_your_post", data)
             
             for comm in comment.wallitem.active_comments_set():
-                if not (comm.author == comment.author):
+                if not ((comm.author == comment.author) and (comm.author == comment.wallitem.author)):
                     notification.send([comm.author], "wall_new_comment_your_comment", data)
  
 
