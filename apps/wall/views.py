@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
+from wall.utils import sanitize
+
 from wall.models import Wall, WallItem, WallComment
 from wall.forms import WallItemForm, WallItemCommentForm
 
@@ -51,6 +53,8 @@ def add(request, slug, form_class=WallItemForm,
                 body = posting[:wall.max_item_length]
             else:
                 body = posting
+                
+            body = sanitize(body)
             item = WallItem( author=request.user, wall=wall, body=body, created_at=datetime.now() )
             item.save()
             
@@ -122,6 +126,8 @@ def commentadd( request, wallitemid, form_class=WallItemCommentForm,
                 commentbody = commentbody[:max_length]
             else:
                 commentbody = commentbody
+                
+            commentbody = sanitize(commentbody)
             
             comment = WallComment( author=request.user, wallitem=wallitem, body=commentbody, created_at=datetime.now() )
             comment.save()
