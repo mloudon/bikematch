@@ -9,6 +9,17 @@ section {
 .modal form {
   margin-bottom: 0px;
 }
+.modal {
+  height: 640px;
+  width: 830px;
+  margin-top: -320px;
+  margin-left: -415px;
+
+  .modal-body {
+    height: 80%;
+    overflow-y: scroll;
+  }
+}
 /*
 section > .row {
   margin-bottom: 10px;

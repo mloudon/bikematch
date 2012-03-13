@@ -27,7 +27,6 @@
 
 <hr/>
 
-{% autoescape off %}
 {% if items %}
 {% autopaginate items 20 %}
 {% for item in items %}
@@ -114,7 +113,7 @@
 {% endfor %}
 {% paginate %}
 {% endif %}
-{% endautoescape %}
+
 {% endblock %}
 
 {% block extra_body_scripts %}
