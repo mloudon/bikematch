@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^addcomment/(?P<wallitemid>[-\d]+)/$', 'wall.views.commentadd', name="add_wall_comment"),
     url(r'^delete/(?P<id>\d+)/$', 'wall.views.delete', name="delete_wall_item"),
     url(r'^deletecomment/(?P<id>\d+)/$', 'wall.views.commentdelete', name="delete_wall_comment"),
+    url(r'^viewimage/(?P<wallitemid>[-\d]+)/$', 'wall.views.wall_image', name="view_wall_image"),
 )

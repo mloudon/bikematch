@@ -22,6 +22,7 @@ def home( request, slug, template_name='wall/home.html'):
     return render_to_response( template_name,
         {   "wall": wall,
             "form": WallItemForm(),
+            "items" : wall.active_items_set(),
             'commentform':WallItemCommentForm()
         },
         context_instance = RequestContext( request ))
@@ -161,3 +162,10 @@ def commentdelete(request, id):
         return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
     
     return HttpResponseRedirect(success_url)
+
+def wall_image(request,wallitemid):
+    wallitem = get_object_or_404( WallItem, id=wallitemid )
+    
+    return render_to_response('wall/wall_image.html', {
+        'item': wallitem
+    }, context_instance=RequestContext(request))

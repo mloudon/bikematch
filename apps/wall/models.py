@@ -47,6 +47,9 @@ class WallItem(models.Model):
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
     deleted = models.BooleanField(default=False)
     item_pic = models.ImageField(upload_to='upload',null=True,)
+    item_pic_800x600 = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
+            resize.Fit(800,600, False)], image_field='item_pic',
+            format='JPEG', options={'quality': 90})
     item_pic_resized = ImageSpec([Adjust(contrast=1.2, sharpness=1.1),
             resize.Fit(300, 300)], image_field='item_pic',
             format='JPEG', options={'quality': 90})
