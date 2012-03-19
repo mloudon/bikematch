@@ -33,7 +33,7 @@ urlpatterns = patterns("",
     (r'^messages/', include('django_messages.urls')),
     url(r"^wall/", include("wall.urls")),
     url(r"^mapview/$", "bikematchapp.views.mapview", name="mapview"),
-    url(r"^resources/$", resources, name="resources"),
+    #url(r"^resources/$", resources, name="resources"),
 )
 
 
