@@ -1,6 +1,6 @@
 from profiles.models import Profile
 from locations.widgets import LocationField
-from django.forms import ModelForm
+from django.forms import ModelForm, CharField
 
 DAYS_PER_WEEK_CHOICES = (
     ('none, but I\'d like to start!', 0),
@@ -15,6 +15,7 @@ DAYS_PER_WEEK_CHOICES = (
 
 class EditProfileForm(ModelForm):
     location = LocationField(label="Location")
+    name = CharField (max_length=100, required = True)
     
     class Meta:
         model = Profile
