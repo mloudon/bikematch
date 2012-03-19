@@ -118,14 +118,22 @@ class Wall(models.Model):
     
 @receiver(signals.post_save, sender=WallComment)
 def notify_comment(sender, **kwargs):
+    
     comment = kwargs['instance']
-    if (not comment.deleted) and (not (comment.author == comment.wallitem.author)):
-        if notification:
-            data = {'comment_body': comment.body,'comment_author': comment.author.get_profile().name,}
+    if notification and not comment.deleted:
+        already_notified=[comment.author]
+        
+        data = {'comment_body': comment.body,'comment_author': comment.author.get_profile().name,}
+        
+        if comment.wallitem.author not in already_notified:
             notification.send([comment.wallitem.author], "wall_new_comment_your_post", data)
-            
-            for comm in comment.wallitem.active_comments_set():
-                if not ((comm.author == comment.author) and (comm.author == comment.wallitem.author)):
-                    notification.send([comm.author], "wall_new_comment_your_comment", data)
+            print 'notify comment! new comment your post'
+            already_notified.append(comment.wallitem.author)
+        
+        for comm in comment.wallitem.active_comments_set():
+            if comm.author not in already_notified:
+                notification.send([comm.author], "wall_new_comment_your_comment", data)
+                already_notified.append(comm.author)
+                print 'notify comment! new comment your comment'
  
 
