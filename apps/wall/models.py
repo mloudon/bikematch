@@ -43,7 +43,7 @@ class WallItem(models.Model):
     """
     wall       = models.ForeignKey('Wall')
     author     = models.ForeignKey(User, related_name="wall_item_author")
-    body       = models.TextField(_('item_body'))
+    body       = models.TextField(_('item_body'), help_text='Use the editor to add links; no embedded html allowed.')
     created_at = models.DateTimeField(_('created at'), default=datetime.now)
     deleted = models.BooleanField(default=False)
     item_pic = models.ImageField(upload_to='upload',null=True,)
