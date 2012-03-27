@@ -16,11 +16,21 @@
 <div class="form-toggle">    
     <p><span id="post-to-wall-toggle" class="btn primary large">{% trans "Post to the wall" %}</span></p>
     <div id="post-to-wall" style="display:none">
-        <form method="POST" class="uniForm" enctype="multipart/form-data" action="{% url add_wall_item wall.slug %}">{% csrf_token %}
-            {{ form|as_bootstrap }}
+    <form method="POST" class="uniForm" enctype="multipart/form-data" action="{% url add_wall_item wall.slug %}">{% csrf_token %}
+            <fieldset class="control-group">
+    		<div class="row wallitem-form-controls">
+    		<div class="span10">
+       			{{ form.posting }}
+       			<p><i>Use the editor to add links; no embedded html allowed.</i></p>
+       		</div>
+       		<div class="span2">
+       			<p>{{ form.img.label}}</p>
+       			{{ form.img }}
+       		</div>
+    		</div>
+			</fieldset>
             <input type="submit" class="btn primary large" value="{% trans 'Submit' %}" />
         </form>
-
     </div>
     
 </div>
