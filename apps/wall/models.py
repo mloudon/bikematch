@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import truncatewords
 from imagekit.models import ImageSpec
@@ -14,6 +14,8 @@ if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
     notification = None
+    
+import HTMLParser
                         
 class WallComment(models.Model):
     """
@@ -116,6 +118,23 @@ class Wall(models.Model):
         return WallItem.objects.filter(wall=self,created_at__gt=dt)[:amount]
     
     
+@receiver(signals.post_save, sender=WallItem)
+def notify_new_post(sender, **kwargs):
+    
+    item = kwargs['instance']
+    if notification and not item.deleted:
+        already_notified=[item.author]
+        h = HTMLParser.HTMLParser()
+        data = {'item_author': item.author.get_profile().name,}
+        
+        users=[]
+        for u in User.objects.all():
+            if (u not in already_notified):
+                users.append(u)
+            
+        notification.send(users, "wall_new_post", data)
+        
+
 @receiver(signals.post_save, sender=WallComment)
 def notify_comment(sender, **kwargs):
     
@@ -127,13 +146,13 @@ def notify_comment(sender, **kwargs):
         
         if comment.wallitem.author not in already_notified:
             notification.send([comment.wallitem.author], "wall_new_comment_your_post", data)
-            print 'notify comment! new comment your post'
+            #print 'notify comment! new comment your post'
             already_notified.append(comment.wallitem.author)
         
         for comm in comment.wallitem.active_comments_set():
             if comm.author not in already_notified:
                 notification.send([comm.author], "wall_new_comment_your_comment", data)
                 already_notified.append(comm.author)
-                print 'notify comment! new comment your comment'
+                #print 'notify comment! new comment your comment'
  
 
