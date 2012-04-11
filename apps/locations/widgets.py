@@ -145,7 +145,7 @@ class LocationField(forms.Field):
         
         lat, lng = float(a), float(b)
         
-        if lat == DEFAULT_LAT or lon == DEFAULT_LON:
+        if lat == DEFAULT_LAT or lng == DEFAULT_LON:
             raise forms.ValidationError("")
         
         return Location.objects.create(latitude = lat, longitude = lng, automatic = True)
