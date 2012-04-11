@@ -144,6 +144,10 @@ class LocationField(forms.Field):
             a, b = value
         
         lat, lng = float(a), float(b)
+        
+        if lat == DEFAULT_LAT or lon == DEFAULT_LON:
+            raise forms.ValidationError("")
+        
         return Location.objects.create(latitude = lat, longitude = lng, automatic = True)
 
 class GoogleMap(Widget):
