@@ -267,6 +267,10 @@
                 var map = parse(obj, div.children('div')[0]);
                 // Save the map to div data.
                 div.data('map', map);
+
+		bikeLayer = new google.maps.BicyclingLayer();
+    		bikeLayer.setMap(map);
+
                 // Handle objects.
                 for (var k in objects) {
                     if (k in obj) {
