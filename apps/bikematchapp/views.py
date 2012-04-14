@@ -44,7 +44,7 @@ def index(request):
 
 def mapview(request, template_name='bikematchapp/mapview.html'):
     gmap = maps.Map(opts={
-        'center': maps.LatLng(34.0205, -118.2856), #USC is 34.0205N, 118.2856W
+        'center': maps.LatLng(34.122605,-118.309708), #USC is 34.0205N, 118.2856W 
         'mapTypeId': maps.MapTypeId.ROADMAP,
         #'size': maps.Size(800,600),
         'zoom': 11,
