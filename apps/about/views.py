@@ -1,5 +1,7 @@
 from django.template import RequestContext
 from django.shortcuts import redirect,render_to_response
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 def what_next(request):
     error_message = ""
@@ -9,10 +11,10 @@ def what_next(request):
         location = profile.location
         
         if (name == None) or ( location == None):
-            return redirect('/profiles/edit')
+            return HttpResponseRedirect(reverse('profile_edit_noescape'))
         
     except:
-        return redirect('/profiles/edit')
+        return HttpResponseRedirect(reverse('profile_edit_noescape'))
         
     return render_to_response('about/what_next.html', {
         'error_message': error_message,

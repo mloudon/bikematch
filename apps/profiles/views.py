@@ -259,12 +259,13 @@ class ProfileCreateView(CreateView):
 
 class ProfileUpdateView(UpdateView):
     
-    template_name = "profiles/profile_edit.html"
     context_object_name = "profile"
     form_class = EditProfileForm
+    template_name = "profiles/profile_edit.html"
     
     def get_template_names(self):
-        return [self.template_name]
+        self.template_name = self.kwargs.get("template_name") #or "profiles/profile_edit.html"
+        return self.template_name
     
     def get_form_class(self):
         
@@ -310,7 +311,7 @@ class ProfileUpdateView(UpdateView):
     
     def form_invalid(self, form):
         if self.request.is_ajax():
-            ctx = RequestContext(self.request, self.get_context_data(form=form))
+            ctx = RequestContext(self.get_context_data(form=form, template=self.get_template_names()))
             data = {
                 "status": "failed",
                 "html": render_to_string(self.template_name_ajax, ctx),

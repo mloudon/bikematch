@@ -1,0 +1,28 @@
+{% extends "theme_base_noescape.html" %}
+
+{% load bootstrap_tags %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Edit Profile" %}{% endblock %}
+{% block extra_head %}
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={{API_KEY}}" type="text/javascript"></script>
+{% endblock %}
+{% block body_onload%}load_location(){% endblock %}
+{% block body %}
+    
+    <h1>{% trans "Edit Profile" %}</h1>
+    
+    
+<form method="POST" enctype="multipart/form-data"  action="{% url profile_edit_noescape %}">
+    {% csrf_token %}
+    <fieldset>
+        {{ profile_form|as_bootstrap }}
+    </fieldset>
+    <div class="actions">
+        <button type="submit" class="btn primary">Update</button>
+        <a href="{% url profile_detail profile.user.username %}" class="btn">Cancel</a>
+    </div>
+</form>
+   
+{% endblock %}
