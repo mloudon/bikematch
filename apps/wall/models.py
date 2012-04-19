@@ -15,7 +15,6 @@ if "notification" in settings.INSTALLED_APPS:
 else:
     notification = None
     
-import HTMLParser
                         
 class WallComment(models.Model):
     """
@@ -118,13 +117,12 @@ class Wall(models.Model):
         return WallItem.objects.filter(wall=self,created_at__gt=dt)[:amount]
     
     
-@receiver(signals.post_save, sender=WallItem)
+#@receiver(signals.post_save, sender=WallItem)
 def notify_new_post(sender, **kwargs):
     
     item = kwargs['instance']
     if notification and not item.deleted:
         already_notified=[item.author]
-        h = HTMLParser.HTMLParser()
         data = {'item_author': item.author.get_profile().name,}
         
         users=[]
@@ -135,7 +133,7 @@ def notify_new_post(sender, **kwargs):
         notification.send(users, "wall_new_post", data)
         
 
-@receiver(signals.post_save, sender=WallComment)
+#@receiver(signals.post_save, sender=WallComment)
 def notify_comment(sender, **kwargs):
     
     comment = kwargs['instance']
