@@ -117,7 +117,7 @@ class Wall(models.Model):
         return WallItem.objects.filter(wall=self,created_at__gt=dt)[:amount]
     
     
-#@receiver(signals.post_save, sender=WallItem)
+@receiver(signals.post_save, sender=WallItem)
 def notify_new_post(sender, **kwargs):
     
     item = kwargs['instance']
@@ -133,7 +133,7 @@ def notify_new_post(sender, **kwargs):
         notification.send(users, "wall_new_post", data)
         
 
-#@receiver(signals.post_save, sender=WallComment)
+@receiver(signals.post_save, sender=WallComment)
 def notify_comment(sender, **kwargs):
     
     comment = kwargs['instance']
